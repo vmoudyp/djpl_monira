@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">Monira</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <string name="home_second">Home Second</string>
+
+    <string name="dashboard_realization">Realisasi</string>
+    <string name="dashboard_prognosis">Prognosa</string>
+    <string name="dashboard_end_of_year">Akhir Tahun</string>
+    <string name="dashboard_last_year">Tahun Lalu</string>
+    <string name="dashboard_current_month">BULAN INI</string>
+    <string name="dashboard_trend">TREND</string>
+    <string name="dashboard_under_performer">3 TERBAWAH</string>
+    <string name="dashboard_type_of_activity">JENIS KEGIATAN</string>
+
+    <string name="material_dialog_ok">OK</string>
+    <string name="material_dialog_yes">YA</string>
+    <string name="material_dialog_no">TIDAK</string>
+    <string name="material_dialog_cancel">BATAL</string>
+
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="tab_all">Semua</string>
+    <string name="tab_employee">Pegawai</string>
+    <string name="tab_goods">Barang</string>
+    <string name="tab_capital">Modal</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+
+    <!-- Strings related to login -->
+    <string name="action_sign_in_register" translatable="false"><b>Sign in</b> or register</string>
+    <string name="action_forgot_password" translatable="false">Recover lost password</string>
+    <string name="login_progress_signing_in" translatable="false">Signing in&#8230;</string>
+    <string name="error_invalid_email" translatable="false">Username is invalid</string>
+    <string name="error_invalid_password" translatable="false">This password is too short</string>
+    <string name="error_incorrect_password" translatable="false">This password is incorrect</string>
+    <string name="error_field_required" translatable="false">This field is required</string>
+    <string name="error_invalid_server_url" translatable="false">This field is required</string>
+    <string name="error_invalid_client_id" translatable="false">This field is required</string>
+
+    <string name="hint_emai" translatable="false">Email</string>
+    <string name="hint_password" translatable="false">Password</string>
+
+
+</resources>

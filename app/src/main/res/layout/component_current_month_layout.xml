@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:plainpie="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <include layout="@layout/component_card_header"/>
+
+    <LinearLayout
+        android:id="@+id/background_process_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="190dp">
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avloadingIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:indicator="BallPulse"
+            app:indicator_color="@color/textColor2"/>
+    </LinearLayout>
+    <FrameLayout
+        android:id="@+id/foreground_content_layout"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="190dp" >
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:rowCount="1"
+            android:columnCount="3"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_columnWeight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:orientation="vertical">
+                <az.plainpie.PieView
+                    android:id="@+id/pie_realization"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    plainpie:font_name="abel-regular"
+                    plainpie:inner_pie_padding="20"
+                    plainpie:percentage="0"
+                    plainpie:percentage_size="30"
+                    plainpie:inner_text_visibility="true"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#c9f1fd"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/abel_regular"
+                    android:text="@string/dashboard_realization">
+                </TextView>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_columnWeight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:orientation="vertical">
+                <az.plainpie.PieView
+                    android:id="@+id/pie_prognosa"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    plainpie:font_name="abel-regular"
+                    plainpie:inner_pie_padding="20"
+                    plainpie:percentage="0"
+                    plainpie:percentage_size="30"
+                    plainpie:inner_text_visibility="true"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#c9f1fd"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/abel_regular"
+                    android:text="@string/dashboard_prognosis">
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_columnWeight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:orientation="vertical">
+                <az.plainpie.PieView
+                    android:id="@+id/pie_end_of_year"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    plainpie:font_name="abel-regular"
+                    plainpie:inner_pie_padding="20"
+                    plainpie:percentage="0"
+                    plainpie:percentage_size="30"
+                    plainpie:inner_text_visibility="true"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#c9f1fd"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/abel_regular"
+                    android:text="@string/dashboard_end_of_year">
+                </TextView>
+
+            </LinearLayout>
+
+        </GridLayout>
+    </FrameLayout>
+</LinearLayout>

@@ -1,0 +1,2 @@
+rootProject.name='Monira'
+include ':app', ':lib-plainpie', ':lib-mpchart', ':lib-anychart', ':lib-loadingindicator'

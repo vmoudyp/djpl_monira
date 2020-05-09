@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#2e1572</color>
+    <color name="colorAccent">#03DAC5</color>
+
+
+    <color name="colorRealization">#7fe1ad</color>
+    <color name="colorPrognosis">#e4351a</color>
+    <color name="colorEndOfYear">#06d0fa</color>
+    <color name="colorLastYear">#FFEB3B</color>
+    <color name="colorUnitItemBackground">#B7708C8F</color>
+
+    <color name="textColor1">#FFFFFF</color>
+    <color name="textColor2">#c9f1fd</color>
+
+
+</resources>
