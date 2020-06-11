@@ -24,31 +24,29 @@
     <LinearLayout
         android:id="@+id/layout_search"
         android:orientation="horizontal"
+        android:gravity="center"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true">
 
-        <TextView
-            android:id="@+id/txt_search"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <ImageView
+            android:id="@+id/btn_monira_logo"
             android:gravity="center"
-            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="?android:attr/actionBarSize"
+            android:layout_alignParentRight="true"
+            app:srcCompat="@drawable/logo_monira_06"
+            android:padding="13dp"
+            android:layout_centerVertical="true" />
 
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/textColor1"
-            android:textSize="22sp"
-            android:fontFamily="@font/abel_regular"
-            android:text="MONIRA" />
 
 
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/btn_new_order"
+        android:id="@+id/btn_list_notifications"
         android:layout_width="50dp"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_alignParentRight="true"

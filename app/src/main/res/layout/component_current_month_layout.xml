@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:plainpie="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:ignore="NamespaceTypo">
 
     <include layout="@layout/component_card_header"/>
 
@@ -13,7 +14,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:layout_height="190dp">
+        android:layout_height="200dp">
 
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/avloadingIndicatorView"
@@ -27,7 +28,7 @@
         android:id="@+id/foreground_content_layout"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="190dp" >
+        android:layout_height="200dp" >
 
         <GridLayout
             android:layout_width="match_parent"
@@ -36,7 +37,7 @@
             android:layout_marginBottom="20dp"
             android:rowCount="1"
             android:columnCount="3"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center_horizontal|top"
             android:orientation="horizontal">
             <LinearLayout
                 android:layout_columnWeight="1"
@@ -61,7 +62,7 @@
                     android:textColor="#c9f1fd"
                     android:padding="10dp"
                     android:gravity="center"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:fontFamily="@font/abel_regular"
                     android:text="@string/dashboard_realization">
                 </TextView>
@@ -90,7 +91,7 @@
                     android:textColor="#c9f1fd"
                     android:padding="10dp"
                     android:gravity="center"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:fontFamily="@font/abel_regular"
                     android:text="@string/dashboard_prognosis">
                 </TextView>
@@ -120,7 +121,7 @@
                     android:textColor="#c9f1fd"
                     android:padding="10dp"
                     android:gravity="center"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:fontFamily="@font/abel_regular"
                     android:text="@string/dashboard_end_of_year">
                 </TextView>

@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorPrimaryDark"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.TypeOfActivityActivity">
@@ -13,10 +14,8 @@
 
         <RelativeLayout android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/toolbarlayout"
-            android:background="@color/colorPrimaryDark"
-            xmlns:android="http://schemas.android.com/apk/res/android">
+            android:background="@color/colorPrimaryDark">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -64,8 +63,8 @@
 
         <TextView
             android:id="@+id/txt_activity_description"
-            android:fontFamily="@font/abel_regular"
             android:background="@color/colorPrimaryDark"
+            android:fontFamily="@font/abel_regular"
             android:padding="15dp"
             android:textColor="@color/colorAccent"
             android:textSize="18sp"
@@ -75,6 +74,7 @@
 
         <TextView
             android:id="@+id/txt_current_date_time"
+            android:background="@color/colorPrimaryDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#c9f1fd"
@@ -89,8 +89,28 @@
             android:background="?attr/colorPrimaryDark" />
     </com.google.android.material.appbar.AppBarLayout>
 
+
+    <LinearLayout
+        android:id="@+id/background_process_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avloadingIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:indicator="BallPulse"
+            app:indicator_color="@color/textColor2"/>
+    </LinearLayout>
+
     <androidx.viewpager.widget.ViewPager
+        android:visibility="gone"
         android:id="@+id/view_pager"
+        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

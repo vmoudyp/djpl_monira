@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:layout_height="190dp">
+        android:layout_height="200dp">
 
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/avloadingIndicatorView"
@@ -26,11 +26,12 @@
     <com.anychart.AnyChartView
         android:id="@+id/chart_trend"
         android:visibility="gone"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="0dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginBottom="40dp"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="270dp"
         />
 
 </LinearLayout>

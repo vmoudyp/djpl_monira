@@ -1,92 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/info_kpa"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        android:paddingBottom="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <include layout="@layout/component_card_header"/>
 
-        <TextView
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/abel_regular"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:text="KPA :"/>
-        <TextView
-            android:id="@+id/info_kpa_name"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/abel_regular"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:text="Lionel Messi"/>
-        <ImageView
-            android:src="@drawable/ic_local_phone_black_24dp"
-            android:layout_width="24dp"
-            android:layout_height="24dp"/>
-        <TextView
-            android:id="@+id/info_kpa_phone"
-            android:layout_marginLeft="10dp"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/abel_regular"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:text="081523456789"/>
-    </LinearLayout>
     <LinearLayout
-        android:id="@+id/info_ppk"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:paddingTop="10dp"
-        android:paddingBottom="20dp"
+        android:id="@+id/background_process_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:gravity="center"
+        android:layout_height="100dp">
 
-        <TextView
-            android:layout_width="30dp"
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avloadingIndicatorView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/abel_regular"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:text="PPK :"/>
-        <TextView
-            android:id="@+id/info_ppk_name"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/abel_regular"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:text="Ronaldo"/>
-        <ImageView
-            android:src="@drawable/ic_local_phone_black_24dp"
-            android:layout_width="24dp"
-            android:layout_height="24dp"/>
-        <TextView
-            android:id="@+id/info_ppk_phone"
-            android:layout_marginLeft="10dp"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/abel_regular"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:text="081523456789"/>
+            android:visibility="visible"
+            app:indicator="BallPulse"
+            app:indicator_color="@color/textColor2"/>
     </LinearLayout>
-    <TextView
-        android:id="@+id/info_address"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:fontFamily="@font/abel_regular"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:text="Jl. Medan Merdeka Barat 65 Jakarta Pusat"/>
-
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp" />
 </LinearLayout>

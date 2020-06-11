@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark1">#2e1572</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="textIcons">#FFFFFF</color>
+
+    <color name="myCustomColor">#f70000</color>
+
+    <color name="percentageFillColor">#14b9d6</color>
+    <color name="percentageUnfilledColor">#8A8B8C</color>
+    <color name="percentageTextBackground">#E3E3E3</color>
+    <color name="percentageTextColor">#090909</color>
+
+
+
+</resources>

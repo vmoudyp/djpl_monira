@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".65"
+            android:fontFamily="@font/abel_regular"
+            android:paddingLeft="20dp"
+            android:gravity="left"
+            android:text="Filled"
+            android:textColor="@color/textColor3"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".1"
+            android:fontFamily="@font/abel_regular"
+            android:paddingLeft="20dp"
+            android:gravity="left"
+            android:text=":"
+            android:textColor="@color/textColor3"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txt_filled"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".25"
+            android:paddingRight="20dp"
+            android:gravity="end"
+            android:text="36"
+            android:textColor="@color/textColor3"
+            android:textSize="18sp"
+            android:fontFamily="@font/abel_regular"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".65"
+            android:fontFamily="@font/abel_regular"
+            android:paddingLeft="20dp"
+            android:gravity="left"
+            android:text="Not Filled"
+            android:textColor="@color/textColor3"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".1"
+            android:fontFamily="@font/abel_regular"
+            android:paddingLeft="20dp"
+            android:gravity="left"
+            android:text=":"
+            android:textColor="@color/textColor3"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txt_not_filled"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".25"
+            android:paddingRight="20dp"
+            android:gravity="end"
+            android:text="36"
+            android:textColor="@color/textColor3"
+            android:textSize="18sp"
+            android:fontFamily="@font/abel_regular"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".65"
+            android:fontFamily="@font/abel_regular"
+            android:paddingLeft="20dp"
+            android:gravity="left"
+            android:text="Under 50%"
+            android:textColor="@color/textColor3"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".1"
+            android:fontFamily="@font/abel_regular"
+            android:paddingLeft="20dp"
+            android:gravity="left"
+            android:text=":"
+            android:textColor="@color/textColor3"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txt_under_fifty_percent"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".25"
+            android:paddingRight="20dp"
+            android:gravity="end"
+            android:text="36"
+            android:textColor="@color/textColor3"
+            android:textSize="18sp"
+            android:fontFamily="@font/abel_regular"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".65"
+            android:fontFamily="@font/abel_regular"
+            android:paddingLeft="20dp"
+            android:gravity="left"
+            android:text="Total"
+            android:textColor="@color/textColor3"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".1"
+            android:fontFamily="@font/abel_regular"
+            android:paddingLeft="20dp"
+            android:gravity="left"
+            android:text=":"
+            android:textColor="@color/textColor3"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txt_total"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".25"
+            android:paddingRight="20dp"
+            android:gravity="end"
+            android:text="36"
+            android:textColor="@color/textColor3"
+            android:textSize="18sp"
+            android:fontFamily="@font/abel_regular"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -31,7 +31,7 @@
                     android:scaleType="centerInside"
                     android:layout_width="200dp"
                     android:layout_height="90dp"
-                    android:src="@drawable/ic_logo_djpl" />
+                    android:src="@drawable/ic_logo_monira_squre_72dp" />
 
 
                 <EditText
@@ -71,7 +71,7 @@
                     android:layout_margin="16dp">
 
                     <ProgressBar
-                        android:id="@+id/progressBar1"
+                        android:id="@+id/progressBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -85,10 +85,9 @@
                         android:paddingLeft="32dp"
                         android:paddingRight="32dp"
                         android:textSize="18sp"
-                        android:text="@string/action_sign_in_short"
-                        android:textStyle="bold"/>
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="@string/action_sign_in_short"/>
                 </FrameLayout>
-
                 <TextView
                     android:id="@+id/login_status_message"
                     android:layout_width="fill_parent"

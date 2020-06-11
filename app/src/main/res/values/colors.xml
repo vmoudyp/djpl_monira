@@ -13,6 +13,16 @@
 
     <color name="textColor1">#FFFFFF</color>
     <color name="textColor2">#c9f1fd</color>
+    <color name="textColor3">#2e1572</color>
+    <color name="textColor4">#000000</color>
 
+    <color name="notification_priority_danger">#FB0101</color>
+    <color name="notification_priority_warning">#FFEB3B</color>
+
+    <color name="national_color">#F0FB0101</color>
+    <color name="satker_color">#FFEB3B</color>
+
+    <color name="ranking_color_red">#F0FB0101</color>
+    <color name="ranking_color_normal">#B7708C8F</color>
 
 </resources>

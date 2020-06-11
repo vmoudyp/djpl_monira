@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".30"
+            android:fontFamily="@font/abel_regular"
+            android:paddingLeft="15dp"
+            android:gravity="left"
+            android:text="Pagu"
+            android:textColor="@color/textColor3"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".1"
+            android:fontFamily="@font/abel_regular"
+            android:gravity="left"
+            android:text=":"
+            android:textColor="@color/textColor3"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txt_pagu"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".60"
+            android:paddingRight="15dp"
+            android:gravity="end"
+            android:text="36"
+            android:textColor="@color/textColor3"
+            android:textSize="16sp"
+            android:fontFamily="@font/abel_regular"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".30"
+            android:fontFamily="@font/abel_regular"
+            android:paddingLeft="15dp"
+            android:gravity="left"
+            android:text="Realisasi"
+            android:textColor="@color/textColor3"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".1"
+            android:fontFamily="@font/abel_regular"
+            android:gravity="left"
+            android:text=":"
+            android:textColor="@color/textColor3"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txt_realization"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".60"
+            android:paddingRight="15dp"
+            android:gravity="end"
+            android:text="36"
+            android:textColor="@color/textColor3"
+            android:textSize="16sp"
+            android:fontFamily="@font/abel_regular"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".30"
+            android:fontFamily="@font/abel_regular"
+            android:paddingLeft="15dp"
+            android:gravity="left"
+            android:text="Prognosa"
+            android:textColor="@color/textColor3"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".1"
+            android:fontFamily="@font/abel_regular"
+            android:gravity="left"
+            android:text=":"
+            android:textColor="@color/textColor3"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txt_prognosis"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".6"
+            android:paddingRight="15dp"
+            android:gravity="end"
+            android:text="36"
+            android:textColor="@color/textColor3"
+            android:textSize="16sp"
+            android:fontFamily="@font/abel_regular"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".30"
+            android:fontFamily="@font/abel_regular"
+            android:paddingLeft="15dp"
+            android:gravity="left"
+            android:text="SPTJM"
+            android:textColor="@color/textColor3"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".1"
+            android:fontFamily="@font/abel_regular"
+            android:gravity="left"
+            android:text=":"
+            android:textColor="@color/textColor3"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txt_end_of_year"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight=".60"
+            android:paddingRight="15dp"
+            android:gravity="end"
+            android:text="36"
+            android:textColor="@color/textColor3"
+            android:textSize="16sp"
+            android:fontFamily="@font/abel_regular"/>
+
+    </LinearLayout>
+</LinearLayout>

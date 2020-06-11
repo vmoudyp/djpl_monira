@@ -5,15 +5,17 @@ android {
     buildToolsVersion "29.0.2"
 
     defaultConfig {
-        applicationId "id.exorty.snpk.monira"
+        applicationId "id.exorty.monira"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1.5"
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -24,21 +26,28 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
+//    packagingOptions {
+//        exclude 'META-INF/androidx.legacy_legacy-support-v4.version'
+//        exclude 'META-INF/androidx.gridlayout_gridlayout.version'
+//        exclude 'META-INF/androidx.localbroadcastmanager_localbroadcastmanager.version'
+//    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':lib-plainpie')
-    //implementation project(':MPChartLib')
+    implementation project(':lib-mpchart')
     implementation project(':lib-anychart')
     implementation project(':lib-loadingindicator')
+
+//    compile (name: 'highcharts-release', ext:'aar')
+//    implementation 'com.google.code.gson:gson:2.8.5'
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.core:core:1.2.0'
+    implementation 'androidx.core:core:1.3.0'
     implementation 'androidx.navigation:navigation-fragment:2.2.2'
     implementation 'androidx.navigation:navigation-ui:2.2.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
@@ -52,11 +61,16 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     implementation 'com.koushikdutta.ion:ion:3.0.8'
-    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.eclipsesource.minimal-json:minimal-json:0.9.5'
     implementation 'com.github.XunMengWinter:CircularAnim:0.4.6'
+    implementation 'com.highsoft.highcharts:highcharts:8.0'
+    //implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
-    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation "ch.acra:acra-http:5.1.3"
+    implementation "ch.acra:acra-dialog:5.1.3"
+    implementation "ch.acra:acra-notification:5.1.3"
+    implementation "ch.acra:acra-toast:5.1.3"
+    implementation "ch.acra:acra-limiter:5.1.3"
 }

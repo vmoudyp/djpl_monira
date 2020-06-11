@@ -1,33 +1,38 @@
 <resources>
-    <string name="app_name">Monira</string>
+    <string name="app_name">DEK Monira</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">DITJEN HUBLA</string>
+    <string name="nav_header_subtitle">admin@monira.hubla.dephub.go.id</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="main_header_title">Direktorat Jenderal Perhubungan Laut</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-
-    <string name="home_second">Home Second</string>
+    <string name="menu_setting">Setting</string>
+    <string name="menu_logout">Logout</string>
 
     <string name="dashboard_realization">Realisasi</string>
+    <string name="dashboard_realization_value">Nilai Realisasi</string>
     <string name="dashboard_prognosis">Prognosa</string>
-    <string name="dashboard_end_of_year">Akhir Tahun</string>
+    <string name="dashboard_prognosis_value">Nilai Prognosa</string>
+    <string name="dashboard_end_of_year">Prognosa Akhir Tahun</string>
+    <string name="dashboard_end_of_year_value">SPTJM</string>
+    <string name="dashboard_data_info">Penjelasan Data</string>
     <string name="dashboard_last_year">Tahun Lalu</string>
     <string name="dashboard_current_month">BULAN INI</string>
     <string name="dashboard_trend">TREND</string>
     <string name="dashboard_under_performer">3 TERBAWAH</string>
     <string name="dashboard_type_of_activity">JENIS KEGIATAN</string>
+    <string name="dashboard_satker_info">INFO SATKER</string>
 
     <string name="material_dialog_ok">OK</string>
     <string name="material_dialog_yes">YA</string>
     <string name="material_dialog_no">TIDAK</string>
     <string name="material_dialog_cancel">BATAL</string>
+    <string name="material_dialog_call_kpa">Menghubungi KPA</string>
+    <string name="material_dialog_call_ppk">Menghubungi PPK</string>
 
-    <string name="title_activity_main2">Main2Activity</string>
     <string name="tab_all">Semua</string>
     <string name="tab_employee">Pegawai</string>
     <string name="tab_goods">Barang</string>
@@ -56,6 +61,6 @@
 
     <string name="hint_emai" translatable="false">Email</string>
     <string name="hint_password" translatable="false">Password</string>
-
+    <string name="crash_toast_text" translatable="false">Ooooops ! Nampaknya ada masalah dengan aplikasi. Crash Report sudah dikirim ke developer untuk dicarikan solusinya!</string>
 
 </resources>
