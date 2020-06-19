@@ -31,7 +31,7 @@
                     android:scaleType="centerInside"
                     android:layout_width="200dp"
                     android:layout_height="90dp"
-                    android:src="@drawable/ic_logo_monira_squre_72dp" />
+                    android:src="@drawable/logo_monira_06" />
 
 
                 <EditText

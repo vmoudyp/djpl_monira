@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -99,6 +101,8 @@ public class SatkerCurrentMonthComponent extends LinearLayout {
         mChart.setDrawBarShadow(false);
         mChart.setDrawGridBackground(false);
         mChart.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        mChart.getAxisLeft().setAxisMinimum(0);
+        mChart.getAxisLeft().setAxisMaximum(100);
 
         ArrayList xVals = new ArrayList();
 
@@ -208,17 +212,20 @@ public class SatkerCurrentMonthComponent extends LinearLayout {
 
         View dataInfoLayout = inflater.inflate(R.layout.custom_dialog_satker_data_info, null);
 
+        TextView txtPagu = dataInfoLayout.findViewById(R.id.txt_pagu);
+        txtPagu.setText("Rp. " + String.format("%,.0f", joSatker.get("budget_amount").asFloat()));
+
         TextView txtRealization = dataInfoLayout.findViewById(R.id.txt_realization);
         txtRealization.setText("Rp. " + String.format("%,.0f", joSatker.get("realization_amount").asFloat()));
 
         TextView txtPrognosis = dataInfoLayout.findViewById(R.id.txt_prognosis);
         txtPrognosis.setText("Rp. " + String.format("%,.0f", joSatker.get("prognosis_amount").asFloat()));
 
-        TextView txtEndOfYear = dataInfoLayout.findViewById(R.id.txt_end_of_year);
-        txtEndOfYear.setText("Rp. " + String.format("%,.0f", joSatker.get("end_of_year_amount").asFloat()));
+        TextView txtEndOfYearProgonosis = dataInfoLayout.findViewById(R.id.txt_prognosis_end_of_year);
+        txtEndOfYearProgonosis.setText("Rp. " + String.format("%,.0f", joSatker.get("end_of_year_amount").asFloat()));
 
-        TextView txtPagu = dataInfoLayout.findViewById(R.id.txt_pagu);
-        txtPagu.setText("Rp. " + String.format("%,.0f", joSatker.get("budget_amount").asFloat()));
+        TextView txtSptjm = dataInfoLayout.findViewById(R.id.txt_sptjm);
+        txtSptjm.setText("Rp. " + String.format("%,.0f", joSatker.get("sptjm_amount").asFloat()));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom);
         builder.setTitle("Satker - Dalam Rupiah");

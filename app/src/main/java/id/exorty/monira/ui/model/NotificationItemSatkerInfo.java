@@ -19,4 +19,5 @@ public class NotificationItemSatkerInfo implements NotificationListItem{
     public int getType() {
         return SATKER_ITEM_TYPE;
     }
+
 }

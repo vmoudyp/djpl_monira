@@ -92,6 +92,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
+
+        <LinearLayout
+            android:background="@drawable/background_rect_shadow"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_margin="5dp"
+                android:id="@+id/edit_query"
+                android:hint="Query satker ..."
+                android:textColor="@color/textColor3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout

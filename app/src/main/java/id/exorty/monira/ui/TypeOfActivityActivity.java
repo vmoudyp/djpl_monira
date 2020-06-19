@@ -6,8 +6,10 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 import com.google.android.material.tabs.TabLayout;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -36,6 +38,7 @@ import id.exorty.monira.helper.Util;
 import id.exorty.monira.service.DataService;
 import id.exorty.monira.ui.components.Alert;
 import id.exorty.monira.ui.model.ListItem;
+import id.exorty.monira.ui.model.SatkerInfo;
 import id.exorty.monira.ui.typeofactivity.SectionsPagerAdapter;
 
 import static android.view.View.GONE;
@@ -47,6 +50,7 @@ public class TypeOfActivityActivity extends AppCompatActivity {
 
     private TextView mTxtTypeActivityName;
     private String mIdTypeOfActivity;
+
     private int mYear;
     private String[] mTypeOfActivityIds;
     private String[] mTypeOfActivityNames;
@@ -109,10 +113,11 @@ public class TypeOfActivityActivity extends AppCompatActivity {
 
         String token = GetSharedPreferences(TypeOfActivityActivity.this, "token", "");
 
-        mYear = Calendar.getInstance().get(Calendar.YEAR);
+        mYear = Util.GetSharedPreferences(TypeOfActivityActivity.this, "year", Calendar.getInstance().get(Calendar.YEAR));
+        TextView txtFinancialYear = findViewById(R.id.txt_financial_year);
+        txtFinancialYear.setText("Tahun data : " + String.valueOf(mYear));
 
         SaveSharedPreferences(TypeOfActivityActivity.this, "id_type_of_activity", String.valueOf(mIdTypeOfActivity));
-        SaveSharedPreferences(TypeOfActivityActivity.this, "year", String.valueOf(mYear));
 
         mTxtTypeActivityName = findViewById(R.id.txt_activity_description);
         mTxtTypeActivityName.setText(descriptionn);
@@ -122,6 +127,12 @@ public class TypeOfActivityActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(TypeOfActivityActivity.this, R.style.AlertDialogCustom);
 
                 builder.setTitle("Silahkan pilih Jenis Kegiatan");
+                builder.setPositiveButton(R.string.material_dialog_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
                 builder.setAdapter(simpleAdapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -180,7 +191,7 @@ public class TypeOfActivityActivity extends AppCompatActivity {
             }
 
             @Override
-            public void OnFailed(String message) {
+            public void OnFailed(String message, String fullMessage) {
                 if (mLoop < 3){
                     mLoop++;
                     getData();

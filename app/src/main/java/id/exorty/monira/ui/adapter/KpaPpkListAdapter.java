@@ -129,8 +129,10 @@ public class KpaPpkListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         String[] infos = v.getTag().toString().split(";");
-                        if (!infos[1].trim().equals(""))
-                            mCallback.onItemClick(infos[0], infos[1]);
+                        if (infos.length == 2) {
+                            if (!infos[1].trim().equals(""))
+                                mCallback.onItemClick(infos[0], infos[1]);
+                        }
                     }
                 });
                 break;
@@ -159,7 +161,10 @@ public class KpaPpkListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        if (mList != null)
+            return mList.size();
+        else
+            return 0;
     }
 
     @Override

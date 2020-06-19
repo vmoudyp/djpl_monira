@@ -22,7 +22,7 @@ public class DataService {
         void onStart();
         void OnSuccess(JsonObject jsonObject, String message);
         void OnSuccess(JsonArray jsonArray, String message);
-        void OnFailed(String message);
+        void OnFailed(String message, String fullMessage);
     }
 
     public DataService(Activity activity, DataServiceListener dataServiceListener){
@@ -35,12 +35,16 @@ public class DataService {
 
         String url = Config.BASE_API_URL + "api/v1/login?msisdn=" + userName + "&password=" + password + "&remember_me=1";
 
+        JsonObject json = new JsonObject();
+        json.add("foo", "bar");
+
         Ion.with(mActivity)
                 .load("POST", url)
                 .setHeader("Content-Type","application/json")
                 .setHeader("Authorization", "Bearer " + Config.APP_BEARER_TOKEN)
                 .setHeader("app_name", Config.APP_NAME)
                 .setHeader("device_id", Config.DEVICE_ID)
+                .setBodyParameter("data", json.toString())
                 .asString()
                 .setCallback(new FutureCallback<String>() {
                     @Override
@@ -59,13 +63,13 @@ public class DataService {
                                     }
                                     mDataServiceListener.OnSuccess(joResult.get("result").asObject(), joResult.get("message").asString());
                                 } else {
-                                    mDataServiceListener.OnFailed(joResult.get("message").asString());
+                                    mDataServiceListener.OnFailed(joResult.get("message").asString(), result);
                                 }
                             } catch (Exception e1) {
-                                mDataServiceListener.OnFailed(e1.getMessage());
+                                mDataServiceListener.OnFailed(e1.getMessage() == null ? "" : "e1 : " + e1.getMessage(), url + ";" + result);
                             }
                         } else {
-                            mDataServiceListener.OnFailed(e.getMessage());
+                            mDataServiceListener.OnFailed(e.getMessage() == null ? "" : "e : " + e.getMessage(), url + ";" + result);
                         }
                     }
                 });
@@ -101,13 +105,13 @@ public class DataService {
                             if (joResult.get("status").asString().equals(RETURN_STATUS_OK)) {
                                 mDataServiceListener.OnSuccess(joResult.get("result").asObject(), joResult.get("message").asString());
                             } else {
-                                mDataServiceListener.OnFailed(joResult.get("message").asString());
+                                mDataServiceListener.OnFailed(joResult.get("message").asString(), "");
                             }
                         } catch (Exception e1) {
-                            mDataServiceListener.OnFailed(e1.getMessage());
+                            mDataServiceListener.OnFailed(e1.getMessage() == null ? "" :e1.getMessage(), "");
                         }
                     } else {
-                        mDataServiceListener.OnFailed(e.getMessage());
+                        mDataServiceListener.OnFailed(e.getMessage() == null ? "" : e.getMessage(), "");
                     }
                 }
             });
@@ -138,13 +142,13 @@ public class DataService {
                                 if (joResult.get("status").asString().equals(RETURN_STATUS_OK)) {
                                     mDataServiceListener.OnSuccess(joResult.get("result").asObject(), joResult.get("message").asString());
                                 } else {
-                                    mDataServiceListener.OnFailed(joResult.get("message").asString());
+                                    mDataServiceListener.OnFailed(joResult.get("message").asString(), "");
                                 }
                             } catch (Exception e1) {
-                                mDataServiceListener.OnFailed(e1.getMessage());
+                                mDataServiceListener.OnFailed(e1.getMessage() == null ? "" :e1.getMessage(), "");
                             }
                         } else {
-                            mDataServiceListener.OnFailed(e.getMessage());
+                            mDataServiceListener.OnFailed(e.getMessage() == null ? "" : e.getMessage(), "");
                         }
                     }
                 });
@@ -171,15 +175,16 @@ public class DataService {
                             try {
                                 JsonObject joResult = Json.parse(result).asObject();
                                 if (joResult.get("status").asString().equals(RETURN_STATUS_OK)) {
+                                    SaveSharedPreferences(mActivity, "list_of_satker", joResult.get("result").asArray().toString());
                                     mDataServiceListener.OnSuccess(joResult.get("result").asArray(), joResult.get("message").asString());
                                 } else {
-                                    mDataServiceListener.OnFailed(joResult.get("message").asString());
+                                    mDataServiceListener.OnFailed(joResult.get("message").asString(), "");
                                 }
                             } catch (Exception e1) {
-                                mDataServiceListener.OnFailed(e1.getMessage());
+                                mDataServiceListener.OnFailed(e1.getMessage() == null ? "" :e1.getMessage(), "");
                             }
                         } else {
-                            mDataServiceListener.OnFailed(e.getMessage());
+                            mDataServiceListener.OnFailed(e.getMessage() == null ? "" : e.getMessage(), "");
                         }
                     }
                 });
@@ -210,13 +215,13 @@ public class DataService {
                                 if (joResult.get("status").asString().equals(RETURN_STATUS_OK)) {
                                     mDataServiceListener.OnSuccess(joResult.get("result").asObject(), joResult.get("message").asString());
                                 } else {
-                                    mDataServiceListener.OnFailed(joResult.get("message").asString());
+                                    mDataServiceListener.OnFailed(joResult.get("message").asString(), "");
                                 }
                             } catch (Exception e1) {
-                                mDataServiceListener.OnFailed(e1.getMessage());
+                                mDataServiceListener.OnFailed(e1.getMessage() == null ? "" :e1.getMessage(), "");
                             }
                         } else {
-                            mDataServiceListener.OnFailed(e.getMessage());
+                            mDataServiceListener.OnFailed(e.getMessage() == null ? "" : e.getMessage(), "");
                         }
                     }
                 });
@@ -247,13 +252,13 @@ public class DataService {
                                 if (joResult.get("status").asString().equals(RETURN_STATUS_OK)) {
                                     mDataServiceListener.OnSuccess(joResult.get("result").asObject(), joResult.get("message").asString());
                                 } else {
-                                    mDataServiceListener.OnFailed(joResult.get("message").asString());
+                                    mDataServiceListener.OnFailed(joResult.get("message").asString(), "");
                                 }
                             } catch (Exception e1) {
-                                mDataServiceListener.OnFailed(e1.getMessage());
+                                mDataServiceListener.OnFailed(e1.getMessage() == null ? "" :e1.getMessage(), "");
                             }
                         } else {
-                            mDataServiceListener.OnFailed(e.getMessage());
+                            mDataServiceListener.OnFailed(e.getMessage() == null ? "" : e.getMessage(), "");
                         }
                     }
                 });
@@ -284,13 +289,13 @@ public class DataService {
                                 if (joResult.get("status").asString().equals(RETURN_STATUS_OK)) {
                                     mDataServiceListener.OnSuccess(joResult.get("result").asObject(), joResult.get("message").asString());
                                 } else {
-                                    mDataServiceListener.OnFailed(joResult.get("message").asString());
+                                    mDataServiceListener.OnFailed(joResult.get("message").asString(), "");
                                 }
                             } catch (Exception e1) {
-                                mDataServiceListener.OnFailed(e1.getMessage());
+                                mDataServiceListener.OnFailed(e1.getMessage() == null ? "" :e1.getMessage(), "");
                             }
                         } else {
-                            mDataServiceListener.OnFailed(e.getMessage());
+                            mDataServiceListener.OnFailed(e.getMessage() == null ? "" : e.getMessage(), "");
                         }
                     }
                 });
@@ -321,13 +326,13 @@ public class DataService {
                                 if (joResult.get("status").asString().equals(RETURN_STATUS_OK)) {
                                     mDataServiceListener.OnSuccess(joResult.get("result").asObject(), joResult.get("message").asString());
                                 } else {
-                                    mDataServiceListener.OnFailed(joResult.get("message").asString());
+                                    mDataServiceListener.OnFailed(joResult.get("message").asString(), "");
                                 }
                             } catch (Exception e1) {
-                                mDataServiceListener.OnFailed(e1.getMessage());
+                                mDataServiceListener.OnFailed(e1.getMessage() == null ? "" :e1.getMessage(), "");
                             }
                         } else {
-                            mDataServiceListener.OnFailed(e.getMessage());
+                            mDataServiceListener.OnFailed(e.getMessage() == null ? "" : e.getMessage(), "");
                         }
                     }
                 });
@@ -358,13 +363,13 @@ public class DataService {
                                 if (joResult.get("status").asString().equals(RETURN_STATUS_OK)) {
                                     mDataServiceListener.OnSuccess(joResult.get("result").asArray(), joResult.get("message").asString());
                                 } else {
-                                    mDataServiceListener.OnFailed(joResult.get("message").asString());
+                                    mDataServiceListener.OnFailed(joResult.get("message").asString(), "");
                                 }
                             } catch (Exception e1) {
-                                mDataServiceListener.OnFailed(e1.getMessage());
+                                mDataServiceListener.OnFailed(e1.getMessage() == null ? "" :e1.getMessage(), "");
                             }
                         } else {
-                            mDataServiceListener.OnFailed(e.getMessage());
+                            mDataServiceListener.OnFailed(e.getMessage() == null ? "" : e.getMessage(), "");
                         }
                     }
                 });

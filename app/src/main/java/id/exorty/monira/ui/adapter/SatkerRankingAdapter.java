@@ -14,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anychart.core.annotations.Line;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import id.exorty.monira.R;
+import id.exorty.monira.ui.model.SatkerInfo;
 import id.exorty.monira.ui.model.SatkerRankingInfo;
 
 import static id.exorty.monira.helper.Config.SATKER_RANKING_COLOR_RED;
@@ -25,6 +27,8 @@ public class SatkerRankingAdapter  extends RecyclerView.Adapter<SatkerRankingAda
     private Context mContext;
     private int mRowLayout;
     private List<SatkerRankingInfo> mSatkerRankingInfos;
+    private List<SatkerRankingInfo> mTempSatkerRankingInfos = new ArrayList<>();
+
     private Callback mCallback;
 
     public interface Callback{
@@ -45,7 +49,10 @@ public class SatkerRankingAdapter  extends RecyclerView.Adapter<SatkerRankingAda
 
     @Override
     public void onBindViewHolder(@NonNull SatkerRankingAdapter.ViewHolder viewHolder, int position) {
-        SatkerRankingInfo satkerRankingInfo = mSatkerRankingInfos.get(position);
+//        if (position >= mTempSatkerRankingInfos.size())
+//            return;
+
+        SatkerRankingInfo satkerRankingInfo = mTempSatkerRankingInfos.get(position);
 
         viewHolder.txtRank.setText(String.valueOf(satkerRankingInfo.rank));
         viewHolder.txtSatkerName.setText(satkerRankingInfo.satker_name);
@@ -77,12 +84,32 @@ public class SatkerRankingAdapter  extends RecyclerView.Adapter<SatkerRankingAda
 
     @Override
     public int getItemCount() {
-        return this.mSatkerRankingInfos == null ? 0 : this.mSatkerRankingInfos.size();
+        return this.mTempSatkerRankingInfos == null ? 0 : this.mTempSatkerRankingInfos.size();
     }
 
     public void updateData(List<SatkerRankingInfo> satkerRankingInfos){
         mSatkerRankingInfos = satkerRankingInfos;
+        mTempSatkerRankingInfos.clear();
+        mTempSatkerRankingInfos.addAll(mSatkerRankingInfos);
         notifyDataSetChanged();
+    }
+
+    public void filter(String text){
+
+        mTempSatkerRankingInfos.clear();
+        if(text.equals("")){
+            mTempSatkerRankingInfos.addAll(mSatkerRankingInfos);
+        } else{
+            text = text.toLowerCase();
+            for(SatkerRankingInfo item: mSatkerRankingInfos){
+                if(item.satker_name.toLowerCase().contains(text.toLowerCase())){
+                    mTempSatkerRankingInfos.add(item);
+                }
+            }
+        }
+
+        notifyDataSetChanged();
+
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

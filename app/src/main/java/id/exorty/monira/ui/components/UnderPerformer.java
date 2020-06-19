@@ -61,16 +61,20 @@ public class UnderPerformer extends LinearLayout {
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
+        int level = Util.GetSharedPreferences(mContext, "level", -1);
+
         mUnderPerfomerAdapter = new UnderPerfomerAdapter(mContext, R.layout.component_performance_item_layout, new UnderPerfomerAdapter.Callback() {
             @Override
             public void onItemClick(String id, String description) {
-                String a = id;
+                if (level != 3) {
+                    String a = id;
 
-                Intent intent = new Intent(mContext, SatkerActivity.class);
-                intent.putExtra("id", id);
-                intent.putExtra("description", description);
+                    Intent intent = new Intent(mContext, SatkerActivity.class);
+                    intent.putExtra("id", id);
+                    intent.putExtra("description", description);
 
-                mContext.startActivity(intent);
+                    mContext.startActivity(intent);
+                }
 
 //                new AlertDialog.Builder(mContext)
 //                        .setTitle("SATKER INFO")
@@ -88,7 +92,6 @@ public class UnderPerformer extends LinearLayout {
 
         mRecyclerView.setAdapter(mUnderPerfomerAdapter);
 
-        int level = Util.GetSharedPreferences(mContext, "level", -1);
 
         mLayoutSatkerRankingInfo = view.findViewById(R.id.layout_satker_ranking_info);
         LinearLayout layout_button = view.findViewById(R.id.layout_button);

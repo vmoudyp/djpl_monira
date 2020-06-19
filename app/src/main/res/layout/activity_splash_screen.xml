@@ -27,9 +27,9 @@
                 android:id="@+id/monira_logo"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="150dp"
                 android:adjustViewBounds="false"
-                android:background="@drawable/ic_logo_monira_square_144" />
+                android:background="@drawable/logo_monira_06" />
         </LinearLayout>
 
         <com.wang.avi.AVLoadingIndicatorView

@@ -74,6 +74,9 @@ public class SatkerActivity extends AppCompatActivity {
     private String mPhoneNumber;
     private JsonObject mNationalData;
     private JsonObject mSatkerData;
+    private ImageView mBtnCCTV;
+
+    private boolean mIsInit = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,23 +100,33 @@ public class SatkerActivity extends AppCompatActivity {
             }
         });
 
-        ImageView btnCCTV = findViewById(R.id.btn_cctv);
-        btnCCTV.setOnClickListener(new View.OnClickListener() {
+        mBtnCCTV = findViewById(R.id.btn_cctv);
+        mBtnCCTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SatkerActivity.this, cctvActivity.class);
-                intent.putExtra("id", mIdSatker);
-                intent.putExtra("description", mSatkerName);
-                startActivity(intent);
+                if (mIdSatker.equals("021140")){
+                    Intent intent = new Intent(SatkerActivity.this, cctvActivity.class);
+                    intent.putExtra("id", mIdSatker);
+                    intent.putExtra("description", mSatkerName);
+                    startActivity(intent);
+                }
             }
         });
 
 
         mLevel = Util.GetSharedPreferences(SatkerActivity.this, "level", -1);
+        getSatkerList(Util.GetSharedPreferences(SatkerActivity.this, "list_of_satker",""));
 
         Intent intent = getIntent();
-        mIdSatker = intent.getStringExtra("id");
-        mSatkerName = intent.getStringExtra("description");
+        if (intent.getStringExtra("id") != null) {
+            mIdSatker = intent.getStringExtra("id");
+            mSatkerName = intent.getStringExtra("description");
+        }
+
+        mYear = Util.GetSharedPreferences(SatkerActivity.this, "year", Calendar.getInstance().get(Calendar.YEAR));
+        TextView txtFinancialYear = findViewById(R.id.txt_financial_year);
+        txtFinancialYear.setText("Tahun data : " + String.valueOf(mYear));
+        updateCCTVButton();
 
         mNationalData = Json.parse(Util.GetSharedPreferences(SatkerActivity.this, "national_data_current_month", "")).asObject();
 
@@ -123,6 +136,9 @@ public class SatkerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mLevel == 3)
+                    return;
+
+                if (mSatkerInfos == null)
                     return;
 
                 final View customLayout = getLayoutInflater().inflate(R.layout.satker_selection_layout, null);
@@ -150,9 +166,12 @@ public class SatkerActivity extends AppCompatActivity {
                     @Override
                     public void onSelected(SatkerInfo satkerInfo) {
                         mIdSatker = satkerInfo.id;
+                        mSatkerName = satkerInfo.name;
                         mTxtSatkerName.setText(satkerInfo.name);
 
                         getData(false);
+
+                        updateCCTVButton();
 
                         mDialog.dismiss();
                     }
@@ -201,59 +220,34 @@ public class SatkerActivity extends AppCompatActivity {
         });
         mainContent.addView(mSatkerProfileComponent);
 
-        mYear = Calendar.getInstance().get(Calendar.YEAR);
-
-        getSatkerList();
-        if (mIdSatker != null) {
-            getData(true);
-        }
+        mIsInit = true;
+        getData(true);
     }
 
-    private void getSatkerList() {
-        DataService dataService = new DataService(SatkerActivity.this, new DataService.DataServiceListener() {
-            @Override
-            public void onStart() {
-                mSatkerCurrentMonthComponent.startUpdateData();
-                mTrendComponent.startUpdateDate();
+    private void updateCCTVButton(){
+        if (mIdSatker != null) {
+            if (mIdSatker.equals("021140")) {
+                mBtnCCTV.setVisibility(View.VISIBLE);
+            } else {
+                mBtnCCTV.setVisibility(View.GONE);
             }
+        }else{
+            mBtnCCTV.setVisibility(View.GONE);
+        }
 
-            @Override
-            public void OnSuccess(JsonObject jsonObject, String message) {
-            }
+    }
 
-            @Override
-            public void OnSuccess(JsonArray jsonArray, String message) {
-                mSatkerInfos = new ArrayList<>();
-                for (JsonValue jv : jsonArray) {
-                    JsonObject jo = jv.asObject();
-                    mSatkerInfos.add(new SatkerInfo(jo.get("id").asString(), jo.get("name").asString()));
-                }
+    private void getSatkerList(String listOfSatker){
+        JsonArray jsonArray = Json.parse(listOfSatker).asArray();
 
-                if (mIdSatker == null) {
-                    mIdSatker = jsonArray.get(0).asObject().get("id").asString();
-                    mSatkerName = jsonArray.get(0).asObject().get("name").asString();
-                    mSatkerData = jsonArray.get(0).asObject();
-                    mTxtSatkerName.setText(jsonArray.get(0).asObject().get("name").asString());
+        mSatkerInfos = new ArrayList<>();
+        for (JsonValue jv : jsonArray) {
+            JsonObject jo = jv.asObject();
+            mSatkerInfos.add(new SatkerInfo(jo.get("id").asString(), jo.get("name").asString()));
+        }
 
-                    mSatkerCurrentMonthComponent.updateData(mNationalData, mSatkerData);
-                    mTrendComponent.createData(mSatkerData.get("trend").asObject());
-                    //mSatkerProfileComponent.updateData(mSatkerData.get("profile").asObject());
-                }
-
-                mSatkerListLoop = 0;
-            }
-
-            @Override
-            public void OnFailed(String message) {
-                if (mSatkerListLoop < 3) {
-                    mSatkerListLoop++;
-                    getSatkerList();
-                } else {
-                    mSatkerListLoop = 0;
-                    Alert.Show(getApplicationContext(), "", message);
-                }
-            }
-        }).GetListOfSatker();
+        mIdSatker = jsonArray.get(0).asObject().get("id").asString();
+        mSatkerName = jsonArray.get(0).asObject().get("name").asString();
     }
 
     private void getSatkerData() {
@@ -268,6 +262,7 @@ public class SatkerActivity extends AppCompatActivity {
                 mSatkerProfileComponent.updateData(jsonObject);
 
                 mDataLoop = 0;
+
             }
 
             @Override
@@ -275,7 +270,7 @@ public class SatkerActivity extends AppCompatActivity {
             }
 
             @Override
-            public void OnFailed(String message) {
+            public void OnFailed(String message, String fullMessage) {
                 if (mSatkerListLoop < 3) {
                     mSatkerListLoop++;
                     getSatkerData();
@@ -303,10 +298,11 @@ public class SatkerActivity extends AppCompatActivity {
                 else
                     mTrendComponent.updateData(jsonObject.get("trend").asObject());
 
+                mIsInit = false;
+
                 mDataLoop = 0;
 
                 getSatkerData();
-
             }
 
             @Override
@@ -315,7 +311,7 @@ public class SatkerActivity extends AppCompatActivity {
             }
 
             @Override
-            public void OnFailed(String message) {
+            public void OnFailed(String message, String fullMessage) {
                 if (mDataLoop < 3) {
                     mDataLoop++;
                     getData(false);

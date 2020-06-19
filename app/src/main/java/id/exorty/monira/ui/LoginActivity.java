@@ -2,6 +2,8 @@ package id.exorty.monira.ui;
 
 import android.animation.Animator;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,6 +20,7 @@ import com.eclipsesource.json.JsonObject;
 import id.exorty.monira.R;
 import id.exorty.monira.helper.Util;
 import id.exorty.monira.service.DataService;
+import id.exorty.monira.ui.components.Alert;
 import id.exorty.monira.ui.model.User;
 import top.wefor.circularanim.CircularAnim;
 
@@ -44,6 +47,30 @@ public class LoginActivity extends Activity {
         mPasswordView = findViewById(R.id.password);
 
         mLoginStatusMessageView = findViewById(R.id.login_status_message);
+        mLoginStatusMessageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText editText = new EditText(LoginActivity.this);
+                editText.setText(v.getTag().toString());
+                new AlertDialog.Builder(LoginActivity.this)
+                        .setTitle("Login Error")
+                        .setView(editText)
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                // Continue with delete operation
+                            }
+                        })
+
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
         mProgressBar = findViewById(R.id.progressBar);
         mAppVersion = findViewById(R.id.appversion);
 
@@ -81,15 +108,15 @@ public class LoginActivity extends Activity {
         mPasswordView.setError(null);
 
         if (TextUtils.isEmpty(mEmailView.getText())){
-            resetLogin(mEmailView, getString(R.string.error_invalid_email));
+            resetLogin(mEmailView, getString(R.string.error_invalid_email), "");
             return;
         }
 
         if (TextUtils.isEmpty(mPasswordView.getText())) {
-            resetLogin(mPasswordView, getString(R.string.error_field_required));
+            resetLogin(mPasswordView, getString(R.string.error_field_required), "");
             return;
         } else if (mPasswordView.getText().length() < 4) {
-            resetLogin(mPasswordView, getString(R.string.error_invalid_password));
+            resetLogin(mPasswordView, getString(R.string.error_invalid_password), "");
             return;
         }
 
@@ -114,12 +141,12 @@ public class LoginActivity extends Activity {
             if (Util.HasConnection(this)) {
                 Login();
             } else {
-                resetLogin(null, "Invalid User Name or Password");
+                resetLogin(null, "Invalid User Name or Password", "");
             }
         }
     }
 
-    private void resetLogin(View viewFocus, String errorMessage) {
+    private void resetLogin(View viewFocus, String errorMessage, String detailMessage) {
         mProgressBar.setVisibility(View.GONE);
         mBtnLogin.setVisibility(View.VISIBLE);
 
@@ -127,6 +154,7 @@ public class LoginActivity extends Activity {
             viewFocus.requestFocus();
 
         mLoginStatusMessageView.setVisibility(View.VISIBLE);
+        mLoginStatusMessageView.setTag(detailMessage);
         mLoginStatusMessageView.setText(errorMessage);
     }
 
@@ -163,9 +191,10 @@ public class LoginActivity extends Activity {
             }
 
             @Override
-            public void OnFailed(String message) {
-                resetLogin(null, "Invalid User Name or Password");
+            public void OnFailed(String message, String fullMessage) {
+                resetLogin(null, message, fullMessage);
             }
+
         }).Login(mUser.email, mUser.password);
     }
 }

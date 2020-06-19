@@ -77,6 +77,8 @@ public class TrendComponent extends LinearLayout {
         mCartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
         mCartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
+        mCartesian.yScale().minimum(0);
+        mCartesian.yScale().maximum(100);
 
         mCartesian.legend().enabled(true);
         mCartesian.legend().fontFamily("@font/abel_regular");

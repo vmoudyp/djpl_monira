@@ -72,7 +72,6 @@ public class SatkerSelectionAdapter extends RecyclerView.Adapter<SatkerSelection
         notifyDataSetChanged();
     }
 
-
     public void filter(String text) {
 
         mTempSatkerInfos.clear();
@@ -81,7 +80,7 @@ public class SatkerSelectionAdapter extends RecyclerView.Adapter<SatkerSelection
         } else{
             text = text.toLowerCase();
             for(SatkerInfo item: mSatkerInfos){
-                if(item.id.toLowerCase().contains(text) || item.name.toLowerCase().contains(text)){
+                if(item.id.toLowerCase().contains(text.toLowerCase()) || item.name.toLowerCase().contains(text.toLowerCase())){
                     mTempSatkerInfos.add(item);
                 }
             }

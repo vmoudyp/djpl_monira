@@ -32,20 +32,7 @@ public class SplashScreen extends Activity {
 
         mAvloadingIndicatorView = (AVLoadingIndicatorView) findViewById(R.id.avloadingIndicatorView);
 
-        String token = GetSharedPreferences(SplashScreen.this, "token", "");
-
-        if (token.equals("")){
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }, SPLASH_DISPLAY_LENGTH);
-        }else{
-            initApp();
-        }
+        initApp();
     }
 
     private void initApp(){
@@ -58,23 +45,33 @@ public class SplashScreen extends Activity {
 
             @Override
             public void OnSuccess(JsonObject jsonObject, String message) {
-                Util.SaveSharedPreferences(SplashScreen.this,"national_data", jsonObject.toString());
-                Util.SaveSharedPreferences(SplashScreen.this,"national_data_current_month", jsonObject.get("current_month").asObject().toString());
-
-                Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-                startActivity(intent);
-
-                finish();
             }
 
             @Override
             public void OnSuccess(JsonArray jsonArray, String message) {
+                String token = GetSharedPreferences(SplashScreen.this, "token", "");
+
+                if (token.equals("")){
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, SPLASH_DISPLAY_LENGTH);
+                }else{
+                    Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                    startActivity(intent);
+
+                    finish();
+                }
             }
 
             @Override
-            public void OnFailed(String message) {
+            public void OnFailed(String message, String fullMessage) {
                 if (message.equals("Provide token is expired")
-                        || message.equals("Token not provided.")){
+                        || message.equals("Token not provided.") || message.equals("")){
                     Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
@@ -89,6 +86,6 @@ public class SplashScreen extends Activity {
                     }
                 }
             }
-        }).GetNationalData(year);
+        }).GetListOfSatker();
     }
 }

@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 import java.util.Calendar;
 
@@ -34,6 +35,7 @@ import id.exorty.monira.ui.components.TypeOfActivity;
 import id.exorty.monira.ui.components.UnderPerformer;
 
 import static android.view.View.GONE;
+import static id.exorty.monira.helper.Util.SaveSharedPreferences;
 
 public class HomeFragment extends Fragment {
 
@@ -81,6 +83,32 @@ public class HomeFragment extends Fragment {
                 mDialogDataInfo.show();
             }
         });
+
+        mYear = Calendar.getInstance().get(Calendar.YEAR);
+        SaveSharedPreferences(HomeFragment.this.getContext(), "year", mYear);
+
+        TextView txtFinancialYear = root.findViewById(R.id.txt_financial_year);
+        txtFinancialYear.setText("Tahun data : " + String.valueOf(mYear));
+        txtFinancialYear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(HomeFragment.this.getContext(), new MonthPickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(int selectedMonth, int selectedYear) {
+                        mYear = selectedYear;
+                        getNationalData();
+                        SaveSharedPreferences(HomeFragment.this.getContext(), "year", mYear);
+                        txtFinancialYear.setText("Tahun data : " + String.valueOf(mYear));
+                    }
+                }, mYear, 0);
+
+                builder.showYearOnly()
+                        .setYearRange(1990, 2030)
+                        .build()
+                        .show();
+            }
+        });
+
 
         mNotificationComponent = new NotificationComponent(HomeFragment.this.getContext());
         mMainContent.addView(mNotificationComponent);
@@ -141,78 +169,11 @@ public class HomeFragment extends Fragment {
             mMainContent.addView(mTypeOfActivity);
         }
 
-        mYear = Calendar.getInstance().get(Calendar.YEAR);
-
         mIsInit = true;
 
-        String national_data = Util.GetSharedPreferences(HomeFragment.this.getContext(), "national_data","");
-        String national_data_current_month = Util.GetSharedPreferences(HomeFragment.this.getContext(), "national_data_current_month","");
-
-        if (national_data.equals("")) {
-            getNationalData();
-        }else{
-            try {
-                JsonObject jsonObject = Json.parse(national_data).asObject();
-                initContent(jsonObject);
-            }catch (Exception e){
-                getNationalData();
-            }
-        }
+        getNationalData();
 
         return root;
-    }
-
-    private void initContent(JsonObject jsonObject){
-        try {
-            View dataInfoLayout = getLayoutInflater().inflate(R.layout.custom_dialog_data_info, null);
-
-            TextView txtFilled = dataInfoLayout.findViewById(R.id.txt_filled);
-            txtFilled.setText(String.valueOf(jsonObject.get("contribution").asObject().get("filled").asInt()));
-
-            TextView txtNotFilled = dataInfoLayout.findViewById(R.id.txt_not_filled);
-            txtNotFilled.setText(String.valueOf(jsonObject.get("contribution").asObject().get("not_filled").asInt()));
-
-            TextView txtUnderFiftyPercent = dataInfoLayout.findViewById(R.id.txt_under_fifty_percent);
-            txtUnderFiftyPercent.setText(String.valueOf(jsonObject.get("contribution").asObject().get("under_50_percentage").asInt()));
-
-            TextView txtTotal = dataInfoLayout.findViewById(R.id.txt_total);
-            txtTotal.setText(String.valueOf(jsonObject.get("contribution").asObject().get("total_satker").asInt()));
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom);
-            builder.setTitle(R.string.dashboard_data_info);
-
-            builder.setView(dataInfoLayout);
-            builder.setNegativeButton(R.string.material_dialog_ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
-            mDialogDataInfo = builder.create();
-
-            mNotificationComponent.setVisibility(GONE);
-            if (jsonObject.names().contains("notifications")) {
-                if (!jsonObject.get("notifications").asArray().isEmpty()) {
-                    mNotificationComponent.updateData(jsonObject.get("notifications").asArray());
-                    mNotificationComponent.setVisibility(View.VISIBLE);
-                }
-            }
-
-            mNationalCurrentMonthObject = jsonObject.get("current_month").asObject();
-
-            mTrendComponent.createData(jsonObject.get("trend").asObject());
-            mUnderPerformer.updateData(jsonObject.get("under_perfomer").asArray());
-
-            if (mLevel == 3) {
-                getSatkerData();
-            } else {
-                mTypeOfActivity.updateData(jsonObject.get("by_activity").asArray());
-                mCurrentMonthComponent.updateData(mNationalCurrentMonthObject);
-            }
-        }catch (Exception e){
-            Alert.Show(getContext(), "", e.getMessage());
-        }
     }
 
     private void getNationalData(){
@@ -272,14 +233,18 @@ public class HomeFragment extends Fragment {
 
                     mNationalCurrentMonthObject = jsonObject.get("current_month").asObject();
 
+                    if (mIsInit)
+                        mTrendComponent.createData(jsonObject.get("trend").asObject());
+                    else
+                        mTrendComponent.updateData(jsonObject.get("trend").asObject());
+
                     mUnderPerformer.updateData(jsonObject.get("under_perfomer").asArray());
-                    mTypeOfActivity.updateData(jsonObject.get("by_activity").asArray());
 
                     if (mLevel == 3) {
                         getSatkerData();
                     } else {
                         mCurrentMonthComponent.updateData(mNationalCurrentMonthObject);
-                        mTrendComponent.createData(jsonObject.get("trend").asObject());
+                        mTypeOfActivity.updateData(jsonObject.get("by_activity").asArray());
                     }
                     mIsInit = false;
                     mLoop = 0;
@@ -295,7 +260,7 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void OnFailed(String message) {
+            public void OnFailed(String message, String fullMessage) {
                 mIsInit = false;
 
                 if (mLoop < 3){
@@ -339,7 +304,7 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void OnFailed(String message) {
+            public void OnFailed(String message, String fullMessage) {
                 mIsInit = false;
 
                 if (mLoop < 3){
@@ -375,7 +340,7 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void OnFailed(String message) {
+            public void OnFailed(String message, String fullMessage) {
                 mIsInit = false;
 
                 if (mLoop < 3){

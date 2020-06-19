@@ -3,7 +3,10 @@ package id.exorty.monira.ui;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -81,10 +84,31 @@ public class SatkerRankingActivity extends AppCompatActivity {
         });
         mRecyclerView.setAdapter(mSatkerRankingAdapter);
 
+        EditText editText =findViewById(R.id.edit_query);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mSatkerRankingAdapter.filter(s.toString());
+            }
+        });
+
+
         mBackgroundProcessLayout = findViewById(R.id.background_process_layout);
         mAvloadingIndicatorView = findViewById(R.id.avloadingIndicatorView);
 
-        mYear = Calendar.getInstance().get(Calendar.YEAR);
+        mYear = Util.GetSharedPreferences(SatkerRankingActivity.this, "year", Calendar.getInstance().get(Calendar.YEAR));
+        TextView txtFinancialYear = findViewById(R.id.txt_financial_year);
+        txtFinancialYear.setText("Tahun data : " + String.valueOf(mYear));
 
         getSatkerRankingData();
     }
@@ -137,7 +161,7 @@ public class SatkerRankingActivity extends AppCompatActivity {
             }
 
             @Override
-            public void OnFailed(String message) {
+            public void OnFailed(String message, String fullMessage) {
                 if (mLoop < 3){
                     mLoop++;
                     getSatkerRankingData();

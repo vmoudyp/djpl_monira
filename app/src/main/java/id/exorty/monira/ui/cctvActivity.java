@@ -40,15 +40,14 @@ public class cctvActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        int mIdSatker = intent.getIntExtra("id",-1);
+        String mIdSatker = intent.getStringExtra("id");
         String satkerName = intent.getStringExtra("description");
 
-        mTxtSatkerName = findViewById(R.id.txt_satker_name);
         mTxtSatkerName = findViewById(R.id.txt_satker_name);
         mTxtSatkerName.setText(satkerName);
 
         //String link = "https://demo.flashphoner.com:8888/embed_player?urlServer=wss://demo.flashphoner.com:8443&streamName=rtsp://admin:zaldi100709**@66.96.228.118:554/Streaming/Channels/1&mediaProviders=WebRTC,Flash,MSE,WSPlayer";
-        String link = "https://rtsp.me/embed/Q7aky9FS/";
+        String link = "https://rtsp.me/embed/QyFEFG3T/";
 
         WebView webView = (WebView) findViewById(R.id.webView);
         WebSettings settings = webView.getSettings();

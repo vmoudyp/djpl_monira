@@ -9,6 +9,7 @@
 
     <LinearLayout
         android:id="@+id/background_process_layout"
+        android:visibility="gone"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:gravity="center"
@@ -26,7 +27,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"

@@ -8,8 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -28,6 +31,7 @@ import id.exorty.monira.service.DataService;
 import id.exorty.monira.ui.adapter.NotificationListAdapter;
 import id.exorty.monira.ui.adapter.SatkerRankingAdapter;
 import id.exorty.monira.ui.components.Alert;
+import id.exorty.monira.ui.home.HomeFragment;
 import id.exorty.monira.ui.model.NotificationGroupMessageInfo;
 import id.exorty.monira.ui.model.NotificationGroupSatkerInfo;
 import id.exorty.monira.ui.model.NotificationItemMessageInfo;
@@ -46,18 +50,18 @@ public class NotificationListActivity extends AppCompatActivity {
     private LinearLayout mBackgroundProcessLayout;
     private AVLoadingIndicatorView mAvloadingIndicatorView;
 
-    private List<NotificationListItem> notificationListItems;
     private int mYear;
 
     private int mLoop = 0;
-
-    List<NotificationListItem> notificationListItemsBySatker;
-    List<NotificationListItem> notificationListItemsByMessage;
 
     private String mNationalData;
 
     private Button mBtnBySatker;
     private Button mBtnByMessage;
+
+    private String mGroupBy = NOTIFICATION_GROUP_BY_SATKER;
+    private JsonArray mBySatkerJsonArray;
+    private JsonArray mByMessageJsonArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +89,8 @@ public class NotificationListActivity extends AppCompatActivity {
         mBtnBySatker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNotificationListAdapter.updateData(notificationListItemsBySatker);
+                mGroupBy = NOTIFICATION_GROUP_BY_SATKER;
+                mNotificationListAdapter.updateData(mBySatkerJsonArray, mGroupBy);
                 mBtnBySatker.setSelected(true);
                 mBtnBySatker.invalidate();
                 mBtnByMessage.setEnabled(true);
@@ -99,11 +104,12 @@ public class NotificationListActivity extends AppCompatActivity {
         mBtnByMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (notificationListItemsByMessage == null){
-                    getNotificationListData(NOTIFICATION_GROUP_BY_MESSAGE);
-                }else {
-                    mNotificationListAdapter.updateData(notificationListItemsByMessage);
-                }
+                mGroupBy = NOTIFICATION_GROUP_BY_MESSAGE;
+                if (mByMessageJsonArray == null)
+                    getNotificationListData(mGroupBy);
+                else
+                    mNotificationListAdapter.updateData(mByMessageJsonArray, mGroupBy);
+
                 mBtnByMessage.setSelected(true);
                 mBtnByMessage.invalidate();
                 mBtnBySatker.setEnabled(true);
@@ -121,7 +127,7 @@ public class NotificationListActivity extends AppCompatActivity {
 
         mNotificationListAdapter = new NotificationListAdapter(NotificationListActivity.this, new NotificationListAdapter.Callback() {
             @Override
-            public void onItemClick(int id, String description) {
+            public void onItemClick(String id, String description) {
                 Intent intent = new Intent(NotificationListActivity.this, SatkerActivity.class);
                 intent.putExtra("id", id);
                 intent.putExtra("description", description);
@@ -131,10 +137,29 @@ public class NotificationListActivity extends AppCompatActivity {
         });
         mRecyclerView.setAdapter(mNotificationListAdapter);
 
+        EditText editText =findViewById(R.id.edit_query);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mNotificationListAdapter.filter(s.toString(), mGroupBy);
+            }
+        });
+
+
         mBackgroundProcessLayout = findViewById(R.id.background_process_layout);
         mAvloadingIndicatorView = findViewById(R.id.avloadingIndicatorView);
 
-        mYear = Calendar.getInstance().get(Calendar.YEAR);
+        mYear = Util.GetSharedPreferences(NotificationListActivity.this, "year", Calendar.getInstance().get(Calendar.YEAR));
 
         getNotificationListData(NOTIFICATION_GROUP_BY_SATKER);
     }
@@ -154,41 +179,13 @@ public class NotificationListActivity extends AppCompatActivity {
 
             @Override
             public void OnSuccess(JsonArray jsonArray, String message) {
-                List<NotificationListItem> notificationListItems = new ArrayList<>();
-                if (group_by == NOTIFICATION_GROUP_BY_SATKER){
-                    for (int i = 0; i < jsonArray.size(); i++){
-                        JsonObject joGroup = jsonArray.get(i).asObject();
+                //mNotificationListAdapter.updateData(notificationListItems);
+                if (group_by == NOTIFICATION_GROUP_BY_SATKER)
+                    mBySatkerJsonArray = jsonArray;
+                else
+                    mByMessageJsonArray = jsonArray;
 
-                        NotificationGroupSatkerInfo notificationGroupSatkerInfo = new NotificationGroupSatkerInfo(joGroup.get("id").asString(), joGroup.get("name").asString());
-                        notificationListItems.add(notificationGroupSatkerInfo);
-
-                        for (int j = 0; j < joGroup.get("notifications").asArray().size(); j++){
-                            JsonObject joItem = joGroup.get("notifications").asArray().get(j).asObject();
-
-                            NotificationItemSatkerInfo notificationItemSatkerInfo = new NotificationItemSatkerInfo(joGroup.get("id").asString(), joGroup.get("name").asString(), joItem.get("message").asString(), joItem.get("date_time").asString(), joItem.get("priority").asString());
-                            notificationListItems.add(notificationItemSatkerInfo);
-                        }
-                    }
-                    notificationListItemsBySatker =  notificationListItems;
-
-                }else if (group_by == NOTIFICATION_GROUP_BY_MESSAGE){
-                    for (int i = 0; i < jsonArray.size(); i++){
-                        JsonObject joGroup = jsonArray.get(i).asObject();
-
-                        NotificationGroupMessageInfo notificationGroupMessageInfo = new NotificationGroupMessageInfo(joGroup.get("message").asString(), joGroup.get("priority").asString());
-                        notificationListItems.add(notificationGroupMessageInfo);
-
-                        for (int j = 0; j < joGroup.get("satkers").asArray().size(); j++){
-                            JsonObject joItem = joGroup.get("satkers").asArray().get(j).asObject();
-
-                            NotificationItemMessageInfo notificationItemMessageInfo = new NotificationItemMessageInfo(joItem.get("id").asString(), joItem.get("name").asString(), joItem.get("notification").asObject().get("date_time").asString(), joGroup.get("priority").asString());
-                            notificationListItems.add(notificationItemMessageInfo);
-                        }
-                    }
-                    notificationListItemsByMessage =  notificationListItems;
-                }
-
-                mNotificationListAdapter.updateData(notificationListItems);
+                mNotificationListAdapter.updateData(jsonArray, group_by);
 
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mBackgroundProcessLayout.setVisibility(GONE);
@@ -197,7 +194,7 @@ public class NotificationListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void OnFailed(String message) {
+            public void OnFailed(String message, String fullMessage) {
                 if (mLoop < 3){
                     mLoop++;
                     getNotificationListData(group_by);

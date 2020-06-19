@@ -19,4 +19,6 @@ public class Config {
 
     public static final String NOTIFICATION_GROUP_BY_SATKER = "satker";
     public static final String NOTIFICATION_GROUP_BY_MESSAGE = "message";
+
+    public static final String CCTV_SATKER_PATIMBAN = "https://rtsp.me/embed/QyFEFG3T/";
 }

@@ -55,7 +55,7 @@ public class PageViewModel extends ViewModel {
                 }
 
                 @Override
-                public void OnFailed(String message) {
+                public void OnFailed(String message, String fullMessage) {
                     String a = message;
                 }
             }).GetActivityDetailData(id_type_of_activity, year);

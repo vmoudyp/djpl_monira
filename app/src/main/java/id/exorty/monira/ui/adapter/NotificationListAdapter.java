@@ -10,6 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import id.exorty.monira.R;
@@ -19,18 +23,22 @@ import id.exorty.monira.ui.model.NotificationGroupSatkerInfo;
 import id.exorty.monira.ui.model.NotificationItemMessageInfo;
 import id.exorty.monira.ui.model.NotificationItemSatkerInfo;
 import id.exorty.monira.ui.model.NotificationListItem;
-import id.exorty.monira.ui.model.NotificationStandardInfo;
+
+import static id.exorty.monira.helper.Config.NOTIFICATION_GROUP_BY_MESSAGE;
+import static id.exorty.monira.helper.Config.NOTIFICATION_GROUP_BY_SATKER;
 
 public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = "Notification List Adapter";
 
     private Context mContext;
-    private List<NotificationListItem> mNotifications;
+    //private List<NotificationListItem> mNotifications;
+    private List<NotificationListItem> mTempNotifications;
+    private JsonArray mJsonArray;
     private Callback mCallback;
 
     public interface Callback{
-        void onItemClick(int id, String description);
+        void onItemClick(String id, String description);
     }
 
     public NotificationListAdapter(Context context, Callback callback) {
@@ -130,22 +138,30 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
         switch(viewHolder.getItemViewType()) {
 
             case NotificationListItem.MESSAGE_GROUP_TYPE:
-                NotificationGroupMessageInfo notificationGroupMessageInfo = (NotificationGroupMessageInfo) mNotifications.get(position);
+                NotificationGroupMessageInfo notificationGroupMessageInfo = (NotificationGroupMessageInfo) mTempNotifications.get(position);
                 NotificationMessageGroupViewHolder notificationMessageGroupViewHolder = (NotificationMessageGroupViewHolder) viewHolder;
 
                 notificationMessageGroupViewHolder.txtMessage.setText(notificationGroupMessageInfo.message);
                 break;
 
             case NotificationListItem.SATKER_GROUP_TYPE:
-                NotificationGroupSatkerInfo notificationGroupSatkerInfo = (NotificationGroupSatkerInfo) mNotifications.get(position);
+                NotificationGroupSatkerInfo notificationGroupSatkerInfo = (NotificationGroupSatkerInfo) mTempNotifications.get(position);
                 NotificationSatkerGroupViewHolder notificationSatkerGroupViewHolder = (NotificationSatkerGroupViewHolder) viewHolder;
 
                 notificationSatkerGroupViewHolder.txtName.setText(notificationGroupSatkerInfo.name);
+                notificationSatkerGroupViewHolder.mainLayout.setTag(notificationGroupSatkerInfo.satker_id + ";" + notificationGroupSatkerInfo.name);
+                notificationSatkerGroupViewHolder.mainLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String[] satker_info = v.getTag().toString().split(";");
+                        mCallback.onItemClick(satker_info[0],satker_info[1]);
+                    }
+                });
                 break;
 
             case NotificationListItem.MESSAGE_ITEM_TYPE:
 
-                NotificationItemMessageInfo notificationItemMessageInfo = (NotificationItemMessageInfo)mNotifications.get(position);
+                NotificationItemMessageInfo notificationItemMessageInfo = (NotificationItemMessageInfo)mTempNotifications.get(position);
                 NotificationMessageItemViewHolder notificationMessageItemViewHolder = (NotificationMessageItemViewHolder) viewHolder;
 
                 notificationMessageItemViewHolder.txtName.setText(notificationItemMessageInfo.satker_name);
@@ -165,7 +181,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
                     @Override
                     public void onClick(View v) {
                         String[] satker_info = v.getTag().toString().split(";");
-                        mCallback.onItemClick(Integer.valueOf(satker_info[0]),satker_info[1]);
+                        mCallback.onItemClick(satker_info[0],satker_info[1]);
                     }
                 });
 
@@ -173,7 +189,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             case NotificationListItem.SATKER_ITEM_TYPE:
 
-                NotificationItemSatkerInfo notificationItemSatkerInfo = (NotificationItemSatkerInfo)mNotifications.get(position);
+                NotificationItemSatkerInfo notificationItemSatkerInfo = (NotificationItemSatkerInfo)mTempNotifications.get(position);
                 NotificationSatkerItemViewHolder notificationSatkerItemViewHolder = (NotificationSatkerItemViewHolder) viewHolder;
 
                 notificationSatkerItemViewHolder.txtMessage.setText(notificationItemSatkerInfo.message);
@@ -193,7 +209,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
                     @Override
                     public void onClick(View v) {
                         String[] satker_info = v.getTag().toString().split(";");
-                        mCallback.onItemClick(Integer.valueOf(satker_info[0]),satker_info[1]);
+                        mCallback.onItemClick(satker_info[0],satker_info[1]);
                     }
                 });
 
@@ -204,14 +220,110 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        return mNotifications.size();
+        return mTempNotifications == null ? 0 : mTempNotifications.size();
     }
 
     @Override
-    public int getItemViewType(int position) { return mNotifications.get(position).getType(); }
+    public int getItemViewType(int position) { return mTempNotifications.get(position).getType(); }
 
-    public void updateData(List<NotificationListItem> notifications){
-        mNotifications = notifications;
+//    public void updateData(List<NotificationListItem> notifications){
+//        mNotifications = notifications;
+//        notifyDataSetChanged();
+//
+//        mTempNotifications.clear();
+//        mTempNotifications.addAll(mNotifications);
+//
+//    }
+
+    public void updateData(JsonArray jsonArray, String group_by){
+        mTempNotifications = new ArrayList<>();
+        mJsonArray = jsonArray;
+        List<NotificationListItem> notificationListItems = new ArrayList<>();
+        if (group_by == NOTIFICATION_GROUP_BY_SATKER){
+            for (int i = 0; i < jsonArray.size(); i++){
+                JsonObject joGroup = jsonArray.get(i).asObject();
+
+                NotificationGroupSatkerInfo notificationGroupSatkerInfo = new NotificationGroupSatkerInfo(joGroup.get("id").asString(), joGroup.get("name").asString());
+                mTempNotifications.add(notificationGroupSatkerInfo);
+
+                for (int j = 0; j < joGroup.get("notifications").asArray().size(); j++){
+                    JsonObject joItem = joGroup.get("notifications").asArray().get(j).asObject();
+
+                    NotificationItemSatkerInfo notificationItemSatkerInfo = new NotificationItemSatkerInfo(joGroup.get("id").asString(), joGroup.get("name").asString(), joItem.get("message").asString(), joItem.get("date_time").asString(), joItem.get("priority").asString());
+                    mTempNotifications.add(notificationItemSatkerInfo);
+                }
+            }
+
+        }else if (group_by == NOTIFICATION_GROUP_BY_MESSAGE){
+            for (int i = 0; i < jsonArray.size(); i++){
+                JsonObject joGroup = jsonArray.get(i).asObject();
+
+                NotificationGroupMessageInfo notificationGroupMessageInfo = new NotificationGroupMessageInfo(joGroup.get("message").asString(), joGroup.get("priority").asString());
+                mTempNotifications.add(notificationGroupMessageInfo);
+
+                for (int j = 0; j < joGroup.get("satkers").asArray().size(); j++){
+                    JsonObject joItem = joGroup.get("satkers").asArray().get(j).asObject();
+
+                    NotificationItemMessageInfo notificationItemMessageInfo = new NotificationItemMessageInfo(joItem.get("id").asString(), joItem.get("name").asString(), joItem.get("notification").asObject().get("date_time").asString(), joGroup.get("priority").asString());
+                    mTempNotifications.add(notificationItemMessageInfo);
+                }
+            }
+        }
         notifyDataSetChanged();
     }
+
+    public void filter(String text, String group_by) {
+        mTempNotifications = new ArrayList<>();
+
+        if (group_by == NOTIFICATION_GROUP_BY_SATKER){
+            for (int i = 0; i < mJsonArray.size(); i++){
+                JsonObject joGroup = mJsonArray.get(i).asObject();
+
+                if (joGroup.get("name").asString().toLowerCase().contains(text.toLowerCase())) {
+                    NotificationGroupSatkerInfo notificationGroupSatkerInfo = new NotificationGroupSatkerInfo(joGroup.get("id").asString(), joGroup.get("name").asString());
+                    mTempNotifications.add(notificationGroupSatkerInfo);
+
+                    for (int j = 0; j < joGroup.get("notifications").asArray().size(); j++) {
+                        JsonObject joItem = joGroup.get("notifications").asArray().get(j).asObject();
+
+                        NotificationItemSatkerInfo notificationItemSatkerInfo = new NotificationItemSatkerInfo(joGroup.get("id").asString(), joGroup.get("name").asString(), joItem.get("message").asString(), joItem.get("date_time").asString(), joItem.get("priority").asString());
+                        mTempNotifications.add(notificationItemSatkerInfo);
+                    }
+                }
+            }
+
+        }else if (group_by == NOTIFICATION_GROUP_BY_MESSAGE){
+            for (int i = 0; i < mJsonArray.size(); i++){
+                JsonObject joGroup = mJsonArray.get(i).asObject();
+
+                NotificationGroupMessageInfo notificationGroupMessageInfo = new NotificationGroupMessageInfo(joGroup.get("message").asString(), joGroup.get("priority").asString());
+                mTempNotifications.add(notificationGroupMessageInfo);
+
+                for (int j = 0; j < joGroup.get("satkers").asArray().size(); j++){
+                    JsonObject joItem = joGroup.get("satkers").asArray().get(j).asObject();
+
+                    if (joItem.get("name").asString().toLowerCase().contains(text.toLowerCase())) {
+                        NotificationItemMessageInfo notificationItemMessageInfo = new NotificationItemMessageInfo(joItem.get("id").asString(), joItem.get("name").asString(), joItem.get("notification").asObject().get("date_time").asString(), joGroup.get("priority").asString());
+                        mTempNotifications.add(notificationItemMessageInfo);
+                    }
+                }
+            }
+        }
+        notifyDataSetChanged();
+
+//        mTempNotifications.clear();
+//        if(text.equals("")){
+//            mTempNotifications.addAll(mNotifications);
+//        } else{
+//            text = text.toLowerCase();
+//            for(NotificationListItem item: mNotifications){
+//                if(item.id.toLowerCase().contains(text) || item.name.toLowerCase().contains(text)){
+//                    mTempNotifications.add(item);
+//                }
+//            }
+//        }
+
+        notifyDataSetChanged();
+    }
+
 }
