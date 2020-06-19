@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,10 @@ import id.exorty.monira.ui.model.DataInfo;
 import id.exorty.monira.ui.model.SatkerInfo;
 
 public class UnderPerformer extends LinearLayout {
-    protected TextView mTxtCardHeader;
+    private TextView mTxtCardHeader;
+    private LinearLayout mBackgroundProcessLayout;
+    private AVLoadingIndicatorView mAvloadingIndicatorView;
+    private LinearLayout mTryAgainView;
     private RecyclerView mRecyclerView;
     private TextView mTxtSatkerRankingInfo;
     private LinearLayout mLayoutSatkerRankingInfo;
@@ -39,15 +43,19 @@ public class UnderPerformer extends LinearLayout {
     public interface Callback {
         void onOtherSatkerClick();
         void onSatkerRankingClick();
+        void onReload();
     }
 
-    public UnderPerformer(Context context, Callback callback) {
+    public UnderPerformer(Context context) {
         super(context);
 
         this.mContext = context;
-        this.mCallback = callback;
 
         this.addView(createComponent());
+    }
+
+    public void setCallback(Callback callback){
+        this.mCallback = callback;
     }
 
     private View createComponent(){
@@ -57,6 +65,16 @@ public class UnderPerformer extends LinearLayout {
 
         mTxtCardHeader = view.findViewById(R.id.txt_card_header);
         mTxtCardHeader.setText(R.string.dashboard_under_performer);
+
+        mBackgroundProcessLayout = view.findViewById(R.id.background_process_layout);
+        mAvloadingIndicatorView = view.findViewById(R.id.avloadingIndicatorView);
+        mTryAgainView = view.findViewById(R.id.layout_try_again);
+        mTryAgainView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onReload();
+            }
+        });
 
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -123,6 +141,13 @@ public class UnderPerformer extends LinearLayout {
         return view;
     }
 
+    public void startUpdateDate(){
+        mRecyclerView.setVisibility(GONE);
+        mBackgroundProcessLayout.setVisibility(VISIBLE);
+        mAvloadingIndicatorView.setVisibility(VISIBLE);
+        mTryAgainView.setVisibility(GONE);
+    }
+
     public void updateData(JsonArray jsonArray){
         List<DataInfo> dataInfos = new ArrayList<DataInfo>();
         for (int i = 0; i < jsonArray.values().size(); i++) {
@@ -131,6 +156,9 @@ public class UnderPerformer extends LinearLayout {
         }
 
         mUnderPerfomerAdapter.updateData(dataInfos);
+
+        mRecyclerView.setVisibility(VISIBLE);
+        mBackgroundProcessLayout.setVisibility(GONE);
     }
 
     public void updateRankingInfo(int ranking, String color){
@@ -139,5 +167,12 @@ public class UnderPerformer extends LinearLayout {
             mTxtSatkerRankingInfo.setTextColor(mContext.getResources().getColor(R.color.textColor1));
             mLayoutSatkerRankingInfo.setBackgroundColor(mContext.getResources().getColor(R.color.notification_priority_danger));
         }
+    }
+
+    public void errorUpdateData(){
+        mRecyclerView.setVisibility(GONE);
+        mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+        mAvloadingIndicatorView.setVisibility(GONE);
+        mTryAgainView.setVisibility(View.VISIBLE);
     }
 }

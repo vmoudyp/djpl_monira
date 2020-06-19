@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
@@ -13,9 +14,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+
+import java.util.Calendar;
 
 import id.exorty.monira.R;
 import id.exorty.monira.helper.Util;
@@ -24,6 +28,7 @@ import id.exorty.monira.ui.components.Alert;
 import id.exorty.monira.ui.model.User;
 import top.wefor.circularanim.CircularAnim;
 
+import static id.exorty.monira.helper.Util.GetSharedPreferences;
 import static id.exorty.monira.helper.Util.SaveSharedPreferences;
 
 public class LoginActivity extends Activity {
@@ -37,6 +42,8 @@ public class LoginActivity extends Activity {
     private TextView mAppVersion;
 
     private Button mBtnLogin;
+
+    private int mLoop = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,21 +175,8 @@ public class LoginActivity extends Activity {
             @Override
             public void OnSuccess(JsonObject jsonObject, String message) {
                 SaveSharedPreferences(LoginActivity.this, "full_name", jsonObject.get("full_name").asString());
-                //SaveSharedPreferences(LoginActivity.this, "password", jsonObject.get("password").asString());
-                //SaveSharedPreferences(LoginActivity.this, "avatar", jsonObject.get("avatar").asString());
-                //SaveSharedPreferences(LoginActivity.this, "role", jsonObject.get("role").asString());
 
-                User user = new User();
-                user.email = jsonObject.get("email").asString();
-                //user.password = jsonObject.get("password").asString();
-                //user.fullName = jsonObject.get("full_name").asString();
-                //user.roleID = jsonObject.get("role_id").asInt();
-
-                mUser = user;
-
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
-
+                initApp();
             }
 
             @Override
@@ -196,5 +190,37 @@ public class LoginActivity extends Activity {
             }
 
         }).Login(mUser.email, mUser.password);
+    }
+
+    private void initApp(){
+        DataService dataService = new DataService(LoginActivity.this, new DataService.DataServiceListener() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void OnSuccess(JsonObject jsonObject, String message) {
+            }
+
+            @Override
+            public void OnSuccess(JsonArray jsonArray, String message) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+
+                finish();
+            }
+
+            @Override
+            public void OnFailed(String message, String fullMessage) {
+                if (mLoop < 3) {
+                    mLoop++;
+                    initApp();
+                } else {
+                    mLoop = 0;
+                    Toast.makeText(LoginActivity.this,
+                            "Failed to get data from server. Please contact admin : " + message, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }).GetListOfSatker();
     }
 }

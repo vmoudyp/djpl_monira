@@ -22,6 +22,8 @@
             android:visibility="visible"
             app:indicator="BallPulse"
             app:indicator_color="@color/textColor2"/>
+
+        <include layout="@layout/component_try_again"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

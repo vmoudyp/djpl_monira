@@ -49,6 +49,7 @@ public class NotificationListActivity extends AppCompatActivity {
 
     private LinearLayout mBackgroundProcessLayout;
     private AVLoadingIndicatorView mAvloadingIndicatorView;
+    private LinearLayout mTryAgainView;
 
     private int mYear;
 
@@ -90,7 +91,10 @@ public class NotificationListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mGroupBy = NOTIFICATION_GROUP_BY_SATKER;
-                mNotificationListAdapter.updateData(mBySatkerJsonArray, mGroupBy);
+                if (mBySatkerJsonArray == null)
+                    getNotificationListData(mGroupBy);
+                else
+                    mNotificationListAdapter.updateData(mBySatkerJsonArray, mGroupBy);
                 mBtnBySatker.setSelected(true);
                 mBtnBySatker.invalidate();
                 mBtnByMessage.setEnabled(true);
@@ -158,6 +162,13 @@ public class NotificationListActivity extends AppCompatActivity {
 
         mBackgroundProcessLayout = findViewById(R.id.background_process_layout);
         mAvloadingIndicatorView = findViewById(R.id.avloadingIndicatorView);
+        mTryAgainView = findViewById(R.id.layout_try_again);
+        mTryAgainView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getNotificationListData(NOTIFICATION_GROUP_BY_SATKER);
+            }
+        });
 
         mYear = Util.GetSharedPreferences(NotificationListActivity.this, "year", Calendar.getInstance().get(Calendar.YEAR));
 
@@ -168,8 +179,10 @@ public class NotificationListActivity extends AppCompatActivity {
         DataService dataService = new DataService(NotificationListActivity.this, new DataService.DataServiceListener() {
             @Override
             public void onStart() {
-                mBackgroundProcessLayout.setVisibility(View.VISIBLE);
                 mRecyclerView.setVisibility(GONE);
+                mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+                mAvloadingIndicatorView.setVisibility(View.VISIBLE);
+                mTryAgainView.setVisibility(GONE);
             }
 
             @Override
@@ -195,13 +208,16 @@ public class NotificationListActivity extends AppCompatActivity {
 
             @Override
             public void OnFailed(String message, String fullMessage) {
-                if (mLoop < 3){
-                    mLoop++;
-                    getNotificationListData(group_by);
-                }else{
+//                if (mLoop < 3){
+//                    mLoop++;
+//                    getNotificationListData(group_by);
+//                }else{
                     mLoop = 0;
-                    Alert.Show(getApplicationContext(), "", message);
-                }
+                    mRecyclerView.setVisibility(GONE);
+                    mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+                    mAvloadingIndicatorView.setVisibility(GONE);
+                    mTryAgainView.setVisibility(View.VISIBLE);
+//                }
             }
         }).GetNotificationList(mYear, group_by);
     }

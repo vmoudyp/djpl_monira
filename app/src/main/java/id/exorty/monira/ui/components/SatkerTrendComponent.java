@@ -35,6 +35,8 @@ public class SatkerTrendComponent extends LinearLayout {
     private Context mContext;
     private LinearLayout mBackgroundProcessLayout;
     private AVLoadingIndicatorView mAvloadingIndicatorView;
+    private LinearLayout mTryAgainView;
+
     private AnyChartView mAnyChartView;
     private Cartesian mCartesian;
     private Line mRealization;
@@ -44,6 +46,11 @@ public class SatkerTrendComponent extends LinearLayout {
     private List<DataEntry> mNationalSeriesData = new ArrayList<>();
     private List<DataEntry> mSatkerSeriesData = new ArrayList<>();
 
+    private SatkerProfileComponent.Callback mCallback;
+
+    public interface Callback {
+        void onReload();
+    }
 
     public SatkerTrendComponent(Context context) {
         super(context);
@@ -63,6 +70,13 @@ public class SatkerTrendComponent extends LinearLayout {
 
         mBackgroundProcessLayout = view.findViewById(R.id.background_process_layout);
         mAvloadingIndicatorView = view.findViewById(R.id.avloadingIndicatorView);
+        mTryAgainView = view.findViewById(R.id.layout_try_again);
+        mTryAgainView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onReload();
+            }
+        });
 
         Button btnNationalView = view.findViewById(R.id.btn_national_view);
         btnNationalView.setOnClickListener(new OnClickListener() {
@@ -95,6 +109,7 @@ public class SatkerTrendComponent extends LinearLayout {
         mCartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
         mCartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
+        mCartesian.xAxis(0).labels().fontSize(8);
         mCartesian.yScale().maximum(100);
         mCartesian.yScale().minimum(0);
 
@@ -106,6 +121,10 @@ public class SatkerTrendComponent extends LinearLayout {
         mAnyChartView.setChart(mCartesian);
 
         return view;
+    }
+
+    public void setCallback(SatkerProfileComponent.Callback callback){
+        this.mCallback = callback;
     }
 
     public void createData(JsonObject joNational, JsonObject joSatker){
@@ -185,6 +204,8 @@ public class SatkerTrendComponent extends LinearLayout {
     public void startUpdateDate(){
         mAnyChartView.setVisibility(GONE);
         mBackgroundProcessLayout.setVisibility(VISIBLE);
+        mAvloadingIndicatorView.setVisibility(VISIBLE);
+        mTryAgainView.setVisibility(GONE);
     }
 
     public void updateData(JsonObject joNational, JsonObject joSatker){
@@ -227,5 +248,12 @@ public class SatkerTrendComponent extends LinearLayout {
 
         mAnyChartView.setVisibility(VISIBLE);
         mBackgroundProcessLayout.setVisibility(GONE);
+    }
+
+    public void errorUpdateData(){
+        mAnyChartView.setVisibility(GONE);
+        mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+        mAvloadingIndicatorView.setVisibility(GONE);
+        mTryAgainView.setVisibility(View.VISIBLE);
     }
 }

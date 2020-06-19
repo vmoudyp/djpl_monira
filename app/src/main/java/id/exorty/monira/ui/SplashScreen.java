@@ -36,8 +36,6 @@ public class SplashScreen extends Activity {
     }
 
     private void initApp(){
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-
         DataService dataService = new DataService(SplashScreen.this, new DataService.DataServiceListener() {
             @Override
             public void onStart() {

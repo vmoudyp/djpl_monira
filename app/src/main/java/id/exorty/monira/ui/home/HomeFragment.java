@@ -121,56 +121,76 @@ public class HomeFragment extends Fragment {
             txtSatkerName.setText(satkerName);
 
             mSatkerCurrentMonthComponent = new SatkerCurrentMonthComponent(HomeFragment.this.getContext());
-            mMainContent.addView(mSatkerCurrentMonthComponent);
-            mTrendComponent = new TrendComponent(HomeFragment.this.getContext());
-            mMainContent.addView(mTrendComponent);
-            mUnderPerformer = new UnderPerformer(HomeFragment.this.getContext(), new UnderPerformer.Callback() {
+            mSatkerCurrentMonthComponent.setCallback(new SatkerCurrentMonthComponent.Callback() {
                 @Override
-                public void onOtherSatkerClick() {
-                    if (mLevel != 3) {
-                        Intent intent = new Intent(getContext(), SatkerActivity.class);
-                        intent.putExtra("id", "");
-                        intent.putExtra("description", "");
-
-                        getContext().startActivity(intent);
-                    }
-                }
-
-                @Override
-                public void onSatkerRankingClick() {
-                    Intent intent = new Intent(getContext(), SatkerRankingActivity.class);
-                    getContext().startActivity(intent);
+                public void onReload() {
+                    mIsInit = true;
+                    getNationalData();
                 }
             });
+            mMainContent.addView(mSatkerCurrentMonthComponent);
+
+            mTrendComponent = new TrendComponent(HomeFragment.this.getContext());
+            mMainContent.addView(mTrendComponent);
+
+            mUnderPerformer = new UnderPerformer(HomeFragment.this.getContext());
             mMainContent.addView(mUnderPerformer);
+
         }else {
             mCurrentMonthComponent = new CurrentMonthComponent(HomeFragment.this.getContext());
-            mMainContent.addView(mCurrentMonthComponent);
-            mTrendComponent = new TrendComponent(HomeFragment.this.getContext());
-            mMainContent.addView(mTrendComponent);
-            mUnderPerformer = new UnderPerformer(HomeFragment.this.getContext(), new UnderPerformer.Callback() {
+            mCurrentMonthComponent.setCallback(new CurrentMonthComponent.Callback() {
                 @Override
-                public void onOtherSatkerClick() {
-                    Intent intent = new Intent(getContext(), SatkerActivity.class);
-                    intent.putExtra("id", -1);
-                    intent.putExtra("description", "");
-
-                    getContext().startActivity(intent);
-                }
-
-                @Override
-                public void onSatkerRankingClick() {
-                    Intent intent = new Intent(getContext(), SatkerRankingActivity.class);
-                    getContext().startActivity(intent);
+                public void onReload() {
+                    mIsInit = true;
+                    getNationalData();
                 }
             });
+            mMainContent.addView(mCurrentMonthComponent);
+
+            mTrendComponent = new TrendComponent(HomeFragment.this.getContext());
+            mMainContent.addView(mTrendComponent);
+
+            mUnderPerformer = new UnderPerformer(HomeFragment.this.getContext());
             mMainContent.addView(mUnderPerformer);
+
             mTypeOfActivity = new TypeOfActivity(HomeFragment.this.getContext());
             mMainContent.addView(mTypeOfActivity);
         }
 
-        mIsInit = true;
+        mTrendComponent.setCallback(new TrendComponent.Callback() {
+            @Override
+            public void onReload() {
+                mIsInit = true;
+                getNationalData();
+            }
+        });
 
+        mUnderPerformer.setCallback(new UnderPerformer.Callback() {
+            @Override
+            public void onOtherSatkerClick() {
+                if (mLevel != 3) {
+                    Intent intent = new Intent(getContext(), SatkerActivity.class);
+                    intent.putExtra("id", "");
+                    intent.putExtra("description", "");
+
+                    getContext().startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onSatkerRankingClick() {
+                Intent intent = new Intent(getContext(), SatkerRankingActivity.class);
+                getContext().startActivity(intent);
+            }
+
+            @Override
+            public void onReload() {
+                mIsInit = true;
+                getNationalData();
+            }
+        });
+
+        mIsInit = true;
         getNationalData();
 
         return root;
@@ -186,8 +206,10 @@ public class HomeFragment extends Fragment {
                         mSatkerCurrentMonthComponent.startUpdateData();
                     }else {
                         mCurrentMonthComponent.startUpdateData();
-                        mTrendComponent.startUpdateDate();
                     }
+                    mTrendComponent.startUpdateDate();
+                    mUnderPerformer.startUpdateDate();
+                    mTypeOfActivity.startUpdateDate();
                 }
             }
 
@@ -263,13 +285,21 @@ public class HomeFragment extends Fragment {
             public void OnFailed(String message, String fullMessage) {
                 mIsInit = false;
 
-                if (mLoop < 3){
-                    mLoop++;
-                    getNationalData();
-                }else{
-                    mLoop = 0;
-                    Alert.Show(getContext(), "", message);
-                }
+                mLoop = 0;
+                if (mSatkerCurrentMonthComponent != null)
+                    mSatkerCurrentMonthComponent.errorUpdateData();
+
+                if (mCurrentMonthComponent != null)
+                    mCurrentMonthComponent.errorUpdateData();
+
+                if (mTrendComponent != null)
+                    mTrendComponent.errorUpdateData();
+
+                if (mUnderPerformer != null)
+                    mUnderPerformer.errorUpdateData();
+
+                if (mTypeOfActivity != null)
+                    mTypeOfActivity.errorUpdateData();
             }
         }).GetNationalData(mYear);
     }

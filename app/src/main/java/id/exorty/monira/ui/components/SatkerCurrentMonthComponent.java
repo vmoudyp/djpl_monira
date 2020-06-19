@@ -42,11 +42,16 @@ public class SatkerCurrentMonthComponent extends LinearLayout {
 
     private LinearLayout mBackgroundProcessLayout;
     private AVLoadingIndicatorView mAvloadingIndicatorView;
-    private FrameLayout mForegroundContentLayout;
+    private LinearLayout mTryAgainView;
 
     private Dialog mDialogDataInfo;
 
     protected Context mContext;
+
+    private Callback mCallback;
+    public interface Callback {
+        void onReload();
+    }
 
     public SatkerCurrentMonthComponent(Context context) {
         super(context);
@@ -66,8 +71,13 @@ public class SatkerCurrentMonthComponent extends LinearLayout {
 
         mBackgroundProcessLayout = view.findViewById(R.id.background_process_layout);
         mAvloadingIndicatorView = view.findViewById(R.id.avloadingIndicatorView);
-
-        mForegroundContentLayout = view.findViewById(R.id.foreground_content_layout);
+        mTryAgainView = view.findViewById(R.id.layout_try_again);
+        mTryAgainView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onReload();
+            }
+        });
 
         mChart = view.findViewById(R.id.chart_current_month);
         mChart.setOnClickListener(new OnClickListener() {
@@ -82,9 +92,15 @@ public class SatkerCurrentMonthComponent extends LinearLayout {
         return view;
     }
 
+    public void setCallback(Callback callback){
+        this.mCallback = callback;
+    }
+
     public void startUpdateData(){
         mChart.setVisibility(GONE);
         mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+        mAvloadingIndicatorView.setVisibility(VISIBLE);
+        mTryAgainView.setVisibility(GONE);
     }
 
     private void createChart() {
@@ -239,5 +255,12 @@ public class SatkerCurrentMonthComponent extends LinearLayout {
         });
 
         mDialogDataInfo = builder.create();
+    }
+
+    public void errorUpdateData(){
+        mChart.setVisibility(GONE);
+        mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+        mAvloadingIndicatorView.setVisibility(GONE);
+        mTryAgainView.setVisibility(View.VISIBLE);
     }
 }

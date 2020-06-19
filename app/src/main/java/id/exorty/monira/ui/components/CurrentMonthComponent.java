@@ -19,15 +19,22 @@ import id.exorty.monira.R;
 import id.exorty.monira.helper.Util;
 
 public class CurrentMonthComponent extends LinearLayout {
-    private static TextView mTxtCardHeader;
-    private static PieView mPieViewRealization;
-    private static PieView mPieViewPrognosis;
-    private static PieView mPieViewEndOfYear;
-    private static LinearLayout mBackgroundProcessLayout;
-    private static AVLoadingIndicatorView mAvloadingIndicatorView;
-    private static FrameLayout mForegroundContentLayout;
+    private TextView mTxtCardHeader;
+    private PieView mPieViewRealization;
+    private PieView mPieViewPrognosis;
+    private PieView mPieViewEndOfYear;
+    private LinearLayout mBackgroundProcessLayout;
+    private AVLoadingIndicatorView mAvloadingIndicatorView;
+    private LinearLayout mTryAgainView;
+    private FrameLayout mForegroundContentLayout;
 
     protected Context mContext;
+
+    private Callback mCallback;
+
+    public interface Callback {
+        void onReload();
+    }
 
     public CurrentMonthComponent(Context context) {
         super(context);
@@ -47,6 +54,13 @@ public class CurrentMonthComponent extends LinearLayout {
 
         mBackgroundProcessLayout = view.findViewById(R.id.background_process_layout);
         mAvloadingIndicatorView = view.findViewById(R.id.avloadingIndicatorView);
+        mTryAgainView = view.findViewById(R.id.layout_try_again);
+        mTryAgainView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onReload();
+            }
+        });
 
         mForegroundContentLayout = view.findViewById(R.id.foreground_content_layout);
 
@@ -134,12 +148,18 @@ public class CurrentMonthComponent extends LinearLayout {
         return view;
     }
 
-    public static void startUpdateData(){
-        mForegroundContentLayout.setVisibility(View.GONE);
-        mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+    public void setCallback(Callback callback){
+        this.mCallback = callback;
     }
 
-    public static void updateData(JsonObject jsonObject){
+    public void startUpdateData(){
+        mForegroundContentLayout.setVisibility(GONE);
+        mBackgroundProcessLayout.setVisibility(VISIBLE);
+        mAvloadingIndicatorView.setVisibility(VISIBLE);
+        mTryAgainView.setVisibility(GONE);
+    }
+
+    public void updateData(JsonObject jsonObject){
         mPieViewRealization.setPercentage(jsonObject.get("realization").asFloat());
         mPieViewPrognosis.setPercentage(jsonObject.get("prognosis").asFloat());
         mPieViewEndOfYear.setPercentage(jsonObject.get("end_of_year").asFloat());
@@ -162,4 +182,12 @@ public class CurrentMonthComponent extends LinearLayout {
         else
             mPieViewEndOfYear.setTag(0f);
     }
+
+    public void errorUpdateData(){
+        mForegroundContentLayout.setVisibility(View.GONE);
+        mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+        mAvloadingIndicatorView.setVisibility(GONE);
+        mTryAgainView.setVisibility(View.VISIBLE);
+    }
+
 }

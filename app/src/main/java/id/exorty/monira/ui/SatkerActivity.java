@@ -119,8 +119,10 @@ public class SatkerActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.getStringExtra("id") != null) {
-            mIdSatker = intent.getStringExtra("id");
-            mSatkerName = intent.getStringExtra("description");
+            if (!intent.getStringExtra("id").equals("")){
+                mIdSatker = intent.getStringExtra("id");
+                mSatkerName = intent.getStringExtra("description");
+            }
         }
 
         mYear = Util.GetSharedPreferences(SatkerActivity.this, "year", Calendar.getInstance().get(Calendar.YEAR));
@@ -200,9 +202,23 @@ public class SatkerActivity extends AppCompatActivity {
         LinearLayout mainContent = findViewById(R.id.main_content);
 
         mSatkerCurrentMonthComponent = new SatkerCurrentMonthComponent(SatkerActivity.this);
+        mSatkerCurrentMonthComponent.setCallback(new SatkerCurrentMonthComponent.Callback() {
+            @Override
+            public void onReload() {
+                mIsInit = true;
+                getData(true);
+            }
+        });
         mainContent.addView(mSatkerCurrentMonthComponent);
 
         mTrendComponent = new TrendComponent(SatkerActivity.this);
+        mTrendComponent.setCallback(new TrendComponent.Callback() {
+            @Override
+            public void onReload() {
+                mIsInit = true;
+                getData(true);
+            }
+        });
         mainContent.addView(mTrendComponent);
 
         mSatkerProfileComponent = new SatkerProfileComponent(SatkerActivity.this, new SatkerProfileComponent.Callback() {
@@ -216,6 +232,12 @@ public class SatkerActivity extends AppCompatActivity {
             public void onWAText(String phoneNUmber) {
                 mPhoneNumber = phoneNUmber;
                 sendWAText();
+            }
+
+            @Override
+            public void onReload() {
+                mIsInit = true;
+                getData(true);
             }
         });
         mainContent.addView(mSatkerProfileComponent);
@@ -317,7 +339,8 @@ public class SatkerActivity extends AppCompatActivity {
                     getData(false);
                 } else {
                     mDataLoop = 0;
-                    Alert.Show(getApplicationContext(), "", message);
+                    mSatkerCurrentMonthComponent.errorUpdateData();
+                    mTrendComponent.errorUpdateData();
                 }
             }
         }).GetSatkerData(mIdSatker, mYear);

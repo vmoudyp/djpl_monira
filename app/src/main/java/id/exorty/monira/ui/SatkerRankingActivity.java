@@ -39,6 +39,7 @@ public class SatkerRankingActivity extends AppCompatActivity {
 
     private LinearLayout mBackgroundProcessLayout;
     private AVLoadingIndicatorView mAvloadingIndicatorView;
+    private LinearLayout mTryAgainView;
 
     private int mYear;
 
@@ -105,6 +106,13 @@ public class SatkerRankingActivity extends AppCompatActivity {
 
         mBackgroundProcessLayout = findViewById(R.id.background_process_layout);
         mAvloadingIndicatorView = findViewById(R.id.avloadingIndicatorView);
+        mTryAgainView = findViewById(R.id.layout_try_again);
+        mTryAgainView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSatkerRankingData();
+            }
+        });
 
         mYear = Util.GetSharedPreferences(SatkerRankingActivity.this, "year", Calendar.getInstance().get(Calendar.YEAR));
         TextView txtFinancialYear = findViewById(R.id.txt_financial_year);
@@ -117,8 +125,10 @@ public class SatkerRankingActivity extends AppCompatActivity {
         DataService dataService = new DataService(SatkerRankingActivity.this, new DataService.DataServiceListener() {
             @Override
             public void onStart() {
-                mBackgroundProcessLayout.setVisibility(View.VISIBLE);
                 mRecyclerView.setVisibility(GONE);
+                mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+                mAvloadingIndicatorView.setVisibility(View.VISIBLE);
+                mTryAgainView.setVisibility(GONE);
             }
 
             @Override
@@ -150,7 +160,6 @@ public class SatkerRankingActivity extends AppCompatActivity {
                 mSatkerRankingAdapter.updateData(satkerRankingInfos);
 
                 mRecyclerView.setVisibility(View.VISIBLE);
-
                 mBackgroundProcessLayout.setVisibility(GONE);
 
                 mLoop = 0;
@@ -162,13 +171,16 @@ public class SatkerRankingActivity extends AppCompatActivity {
 
             @Override
             public void OnFailed(String message, String fullMessage) {
-                if (mLoop < 3){
-                    mLoop++;
-                    getSatkerRankingData();
-                }else{
+//                if (mLoop < 3){
+//                    mLoop++;
+//                    getSatkerRankingData();
+//                }else{
                     mLoop = 0;
-                    Alert.Show(getApplicationContext(), "", message);
-                }
+                    mRecyclerView.setVisibility(GONE);
+                    mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+                    mAvloadingIndicatorView.setVisibility(GONE);
+                    mTryAgainView.setVisibility(View.VISIBLE);
+//                }
             }
         }).GetSatkerRanking(mYear);
     }

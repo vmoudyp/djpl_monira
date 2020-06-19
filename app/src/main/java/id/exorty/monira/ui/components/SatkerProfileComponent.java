@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ public class SatkerProfileComponent extends LinearLayout{
     private RecyclerView mRecyclerView;
     private LinearLayout mBackgroundProcessLayout;
     private AVLoadingIndicatorView mAvloadingIndicatorView;
+    private LinearLayout mTryAgainView;
 
     private KpaPpkListAdapter mKpaPpkListAdapter;
     protected Context mContext;
@@ -41,6 +43,7 @@ public class SatkerProfileComponent extends LinearLayout{
     public interface Callback {
         void onWACall(String phoneNUmber);
         void onWAText(String phoneNUmber);
+        void onReload();
     }
 
     public SatkerProfileComponent(Context context, Callback callback) {
@@ -62,6 +65,13 @@ public class SatkerProfileComponent extends LinearLayout{
 
         mBackgroundProcessLayout = view.findViewById(R.id.background_process_layout);
         mAvloadingIndicatorView = view.findViewById(R.id.avloadingIndicatorView);
+        mTryAgainView = view.findViewById(R.id.layout_try_again);
+        mTryAgainView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onReload();
+            }
+        });
 
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -108,9 +118,15 @@ public class SatkerProfileComponent extends LinearLayout{
         return view;
     }
 
+    public void setCallback(Callback callback){
+        this.mCallback = callback;
+    }
+
     public void startUpdateData(){
         mRecyclerView.setVisibility(GONE);
         mBackgroundProcessLayout.setVisibility(VISIBLE);
+        mAvloadingIndicatorView.setVisibility(VISIBLE);
+        mTryAgainView.setVisibility(GONE);
     }
 
     public void updateData(JsonObject jsonObject){
@@ -146,5 +162,10 @@ public class SatkerProfileComponent extends LinearLayout{
         mBackgroundProcessLayout.setVisibility(GONE);
     }
 
-
+    public void errorUpdateData(){
+        mRecyclerView.setVisibility(GONE);
+        mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+        mAvloadingIndicatorView.setVisibility(GONE);
+        mTryAgainView.setVisibility(View.VISIBLE);
+    }
 }

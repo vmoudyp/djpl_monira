@@ -58,6 +58,7 @@ public class TypeOfActivityActivity extends AppCompatActivity {
     private TabLayout mTabs;
     private LinearLayout mBackgroundProcessLayout;
     private AVLoadingIndicatorView mAvloadingIndicatorView;
+    private LinearLayout mTryAgainView;
     private ViewPager mViewPager;
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -152,6 +153,13 @@ public class TypeOfActivityActivity extends AppCompatActivity {
 
         mBackgroundProcessLayout = findViewById(R.id.background_process_layout);
         mAvloadingIndicatorView = findViewById(R.id.avloadingIndicatorView);
+        mTryAgainView = findViewById(R.id.layout_try_again);
+        mTryAgainView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getData();
+            }
+        });
 
         mTabs = findViewById(R.id.tabs);
         mViewPager = findViewById(R.id.view_pager);
@@ -163,8 +171,10 @@ public class TypeOfActivityActivity extends AppCompatActivity {
         DataService dataService = new DataService(TypeOfActivityActivity.this, new DataService.DataServiceListener() {
             @Override
             public void onStart() {
-                mBackgroundProcessLayout.setVisibility(View.VISIBLE);
                 mViewPager.setVisibility(GONE);
+                mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+                mAvloadingIndicatorView.setVisibility(View.VISIBLE);
+                mTryAgainView.setVisibility(GONE);
             }
 
             @Override
@@ -192,13 +202,16 @@ public class TypeOfActivityActivity extends AppCompatActivity {
 
             @Override
             public void OnFailed(String message, String fullMessage) {
-                if (mLoop < 3){
-                    mLoop++;
-                    getData();
-                }else{
+//                if (mLoop < 3){
+//                    mLoop++;
+//                    getData();
+//                }else{
                     mLoop = 0;
-                    Alert.Show(getApplicationContext(), "", message);
-                }
+                    mViewPager.setVisibility(GONE);
+                    mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+                    mAvloadingIndicatorView.setVisibility(GONE);
+                    mTryAgainView.setVisibility(View.VISIBLE);
+//                }
             }
         }).GetActivityDetailData(mIdTypeOfActivity, mYear);
     }

@@ -19,7 +19,6 @@ import com.anychart.enums.Anchor;
 import com.anychart.enums.MarkerType;
 import com.anychart.enums.TooltipPositionMode;
 import com.anychart.graphics.vector.Stroke;
-import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -27,9 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import id.exorty.monira.R;
-import id.exorty.monira.ui.home.HomeFragment;
 import id.exorty.monira.ui.model.CustomDataEntry;
-import id.exorty.monira.ui.model.DataInfo;
 
 public class TrendComponent extends LinearLayout {
     private TextView txtCardHeader;
@@ -38,10 +35,18 @@ public class TrendComponent extends LinearLayout {
     private LinearLayout mBackgroundProcessLayout;
     private AVLoadingIndicatorView mAvloadingIndicatorView;
     private AnyChartView mAnyChartView;
+    private LinearLayout mTryAgainView;
+
     private Cartesian mCartesian;
     private Line mRealization;
     private Line mPrognosis;
     private Line mLastYear;
+
+    private Callback mCallback;
+
+    public interface Callback {
+        void onReload();
+    }
 
     public TrendComponent(Context context) {
         super(context);
@@ -61,6 +66,14 @@ public class TrendComponent extends LinearLayout {
 
         mBackgroundProcessLayout = view.findViewById(R.id.background_process_layout);
         mAvloadingIndicatorView = view.findViewById(R.id.avloadingIndicatorView);
+        mTryAgainView = view.findViewById(R.id.layout_try_again);
+        mTryAgainView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onReload();
+            }
+        });
+
 
         mAnyChartView = view.findViewById(R.id.chart_trend);
 
@@ -77,6 +90,7 @@ public class TrendComponent extends LinearLayout {
         mCartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
         mCartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
+        mCartesian.xAxis(0).labels().fontSize(8);
         mCartesian.yScale().minimum(0);
         mCartesian.yScale().maximum(100);
 
@@ -88,6 +102,10 @@ public class TrendComponent extends LinearLayout {
         mAnyChartView.setChart(mCartesian);
 
         return view;
+    }
+
+    public void setCallback(Callback callback){
+        this.mCallback = callback;
     }
 
     public void createData(JsonObject jsonObject){
@@ -165,6 +183,8 @@ public class TrendComponent extends LinearLayout {
     public void startUpdateDate(){
         mAnyChartView.setVisibility(GONE);
         mBackgroundProcessLayout.setVisibility(VISIBLE);
+        mAvloadingIndicatorView.setVisibility(VISIBLE);
+        mTryAgainView.setVisibility(GONE);
     }
 
     public void updateData(JsonObject jsonObject){
@@ -189,4 +209,12 @@ public class TrendComponent extends LinearLayout {
         mAnyChartView.setVisibility(VISIBLE);
         mBackgroundProcessLayout.setVisibility(GONE);
     }
+
+    public void errorUpdateData(){
+        mAnyChartView.setVisibility(GONE);
+        mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+        mAvloadingIndicatorView.setVisibility(GONE);
+        mTryAgainView.setVisibility(View.VISIBLE);
+    }
+
 }

@@ -10,8 +10,10 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anychart.AnyChartView;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +26,20 @@ import id.exorty.monira.ui.adapter.TypeOfActivityAdapter;
 import id.exorty.monira.ui.model.DataInfo;
 
 public class TypeOfActivity extends LinearLayout {
-    private static TextView mTxtCardHeader;
-    private static RecyclerView mRecyclerView;
-    private static TypeOfActivityAdapter mTypeOfActivityAdapter;
+    private TextView mTxtCardHeader;
+    private LinearLayout mBackgroundProcessLayout;
+    private AVLoadingIndicatorView mAvloadingIndicatorView;
+    private LinearLayout mTryAgainView;
+    private RecyclerView mRecyclerView;
+    private TypeOfActivityAdapter mTypeOfActivityAdapter;
 
-    private static Context mContext;
+    private Context mContext;
+
+    private Callback mCallback;
+
+    public interface Callback {
+        void onReload();
+    }
 
     public TypeOfActivity(Context context) {
         super(context);
@@ -38,6 +49,10 @@ public class TypeOfActivity extends LinearLayout {
         this.addView(createComponent());
     }
 
+    public void setCallback(Callback callback){
+        this.mCallback = callback;
+    }
+
     private View createComponent(){
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -45,6 +60,16 @@ public class TypeOfActivity extends LinearLayout {
 
         mTxtCardHeader = view.findViewById(R.id.txt_card_header);
         mTxtCardHeader.setText(R.string.dashboard_type_of_activity);
+
+        mBackgroundProcessLayout = view.findViewById(R.id.background_process_layout);
+        mAvloadingIndicatorView = view.findViewById(R.id.avloadingIndicatorView);
+        mTryAgainView = view.findViewById(R.id.layout_try_again);
+        mTryAgainView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onReload();
+            }
+        });
 
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -72,8 +97,14 @@ public class TypeOfActivity extends LinearLayout {
         return view;
     }
 
+    public void startUpdateDate(){
+        mRecyclerView.setVisibility(GONE);
+        mBackgroundProcessLayout.setVisibility(VISIBLE);
+        mAvloadingIndicatorView.setVisibility(VISIBLE);
+        mTryAgainView.setVisibility(GONE);
+    }
 
-    public static void updateData(JsonArray jsonArray){
+    public void updateData(JsonArray jsonArray){
         List<DataInfo> dataInfos = new ArrayList<DataInfo>();
         for (int i = 0; i < jsonArray.values().size(); i++) {
             JsonObject jo = jsonArray.get(i).asObject();
@@ -81,5 +112,15 @@ public class TypeOfActivity extends LinearLayout {
         }
 
         mTypeOfActivityAdapter.updateData(dataInfos);
+
+        mRecyclerView.setVisibility(VISIBLE);
+        mBackgroundProcessLayout.setVisibility(View.GONE);
+    }
+
+    public void errorUpdateData(){
+        mRecyclerView.setVisibility(GONE);
+        mBackgroundProcessLayout.setVisibility(View.VISIBLE);
+        mAvloadingIndicatorView.setVisibility(GONE);
+        mTryAgainView.setVisibility(View.VISIBLE);
     }
 }

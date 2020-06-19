@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_try_again"
+    android:visibility="gone"
+    android:background="@drawable/edge_round"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_logo_app_monira_10"/>
+    <TextView
+        android:textColor="@color/textColor1"
+        android:text="Silahkan coba lagi"
+        android:textSize="18sp"
+        android:fontFamily="@font/abel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
